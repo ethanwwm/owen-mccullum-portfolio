@@ -5,7 +5,7 @@ import Footer from "../components/Footer.astro";
 
 const title = "Contact — Owen McCullum";
 const description =
-  "Get in touch with Owen McCullum — documentary & street photographer based in Washington, D.C. Prints, licensing, and editorial assignments.";
+  "Inquire with Owen McCullum — documentary & street photographer based in Washington, D.C. Prints, licensing, and editorial assignments.";
 
 const EMAIL = "opmccullum@gmail.com";
 ---
@@ -18,44 +18,151 @@ const EMAIL = "opmccullum@gmail.com";
       <h1 class="page-title">Let's make some frames.</h1>
       <p class="page-lede">
         For prints, licensing, editorial assignments, or just to say hello —
-        the quickest way to reach the studio is by email. Based in Washington,
-        D.C.; available for work throughout the DMV and beyond.
+        send a note below. Based in Washington, D.C.; available for work
+        throughout the DMV and beyond.
       </p>
     </header>
 
-    <div class="contact-grid">
-      <div class="contact-block reveal">
-        <p class="ck">Email</p>
-        <a class="big" href={`mailto:${EMAIL}`}>{EMAIL}</a>
-        <p>
-          For licensing or print orders, a short note on the image and intended
-          use will get you a quote fastest.
+    <div class="contact-layout">
+      <!-- Inquiry form -->
+      <form class="inquire reveal" novalidate>
+        <p class="inq-eyebrow">Inquire</p>
+
+        <div class="inq-field">
+          <label for="inq-name">Name</label>
+          <input id="inq-name" name="name" type="text" autocomplete="name" required />
+          <span class="inq-err" aria-live="polite"></span>
+        </div>
+
+        <div class="inq-field">
+          <label for="inq-email">Email</label>
+          <input id="inq-email" name="email" type="email" autocomplete="email" required />
+          <span class="inq-err" aria-live="polite"></span>
+        </div>
+
+        <div class="inq-field">
+          <label for="inq-type">I'm inquiring about</label>
+          <select id="inq-type" name="type">
+            <option value="Print">A print</option>
+            <option value="Licensing">Licensing an image</option>
+            <option value="Assignment">An editorial assignment</option>
+            <option value="General">Something else</option>
+          </select>
+        </div>
+
+        <div class="inq-field">
+          <label for="inq-message">Message</label>
+          <textarea id="inq-message" name="message" rows="4" required></textarea>
+          <span class="inq-err" aria-live="polite"></span>
+        </div>
+
+        <button class="inq-submit" type="submit">Send inquiry</button>
+        <p class="inq-note">
+          Opens your email app, addressed to Owen. Prefer to write directly?
+          <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
         </p>
-      </div>
 
-      <div class="contact-block reveal" style="--d:120ms">
-        <p class="ck">Elsewhere</p>
-        <a class="big" href="https://instagram.com/owenhowsitgoin" target="_blank" rel="noopener">
-          Instagram → @owenhowsitgoin
-        </a>
-        <p>New work and work-in-progress posts most weeks.</p>
-      </div>
-
-      <div class="contact-block reveal" style="--d:200ms">
-        <p class="ck">Studio</p>
-        <p class="big">Washington, D.C.</p>
-        <p>
-          Editorial and documentary assignments considered case by case. Prints
-          ship worldwide.
+        <p class="inq-sent" role="status" hidden>
+          Opening your email app… if nothing happens, write to
+          <a href={`mailto:${EMAIL}`}>{EMAIL}</a>.
         </p>
-      </div>
+      </form>
 
-      <div class="contact-block reveal" style="--d:280ms">
-        <p class="ck">Prints &amp; licensing</p>
-        <a class="big" href="/prints">See terms &amp; pricing →</a>
-        <p>Editions, sizes, and full licensing terms.</p>
-      </div>
+      <!-- Details -->
+      <aside class="contact-aside">
+        <div class="contact-block reveal" style="--d:80ms">
+          <p class="ck">Email</p>
+          <a class="big" href={`mailto:${EMAIL}`}>{EMAIL}</a>
+        </div>
+        <div class="contact-block reveal" style="--d:160ms">
+          <p class="ck">Elsewhere</p>
+          <a class="big" href="https://instagram.com/owenhowsitgoin" target="_blank" rel="noopener">
+            Instagram → @owenhowsitgoin
+          </a>
+        </div>
+        <div class="contact-block reveal" style="--d:240ms">
+          <p class="ck">Studio</p>
+          <p class="big">Washington, D.C.</p>
+          <p>
+            Editorial &amp; documentary assignments considered case by case.
+            Prints ship worldwide.
+          </p>
+        </div>
+        <div class="contact-block reveal" style="--d:320ms">
+          <p class="ck">Prints &amp; licensing</p>
+          <a class="big" href="/prints">See terms &amp; pricing →</a>
+        </div>
+      </aside>
     </div>
   </main>
   <Footer />
 </BaseLayout>
+
+<script>
+  const TO = "opmccullum@gmail.com";
+
+  function initInquire() {
+    const form = document.querySelector<HTMLFormElement>(".inquire");
+    if (!form || form.dataset.init) return;
+    form.dataset.init = "1";
+
+    const name = form.querySelector<HTMLInputElement>("[name=name]")!;
+    const email = form.querySelector<HTMLInputElement>("[name=email]")!;
+    const message = form.querySelector<HTMLTextAreaElement>("[name=message]")!;
+    const typeEl = form.querySelector<HTMLSelectElement>("[name=type]")!;
+    const sent = form.querySelector<HTMLElement>(".inq-sent")!;
+    const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    const setErr = (el: HTMLElement, msg: string) => {
+      const wrap = el.closest(".inq-field")!;
+      wrap.classList.toggle("invalid", !!msg);
+      const err = wrap.querySelector(".inq-err");
+      if (err) err.textContent = msg;
+    };
+
+    const validate = () => {
+      let ok = true;
+      if (!name.value.trim()) {
+        setErr(name, "Please enter your name.");
+        ok = false;
+      } else setErr(name, "");
+      if (!emailRe.test(email.value.trim())) {
+        setErr(email, "Please enter a valid email.");
+        ok = false;
+      } else setErr(email, "");
+      if (message.value.trim().length < 10) {
+        setErr(message, "Tell Owen a little more (10+ characters).");
+        ok = false;
+      } else setErr(message, "");
+      return ok;
+    };
+
+    // Clear an error as soon as the visitor fixes that field.
+    [name, email, message].forEach((el) =>
+      el.addEventListener("input", () => {
+        if (el.closest(".inq-field")!.classList.contains("invalid")) validate();
+      }),
+    );
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (!validate()) {
+        form
+          .querySelector<HTMLElement>(".inq-field.invalid input, .inq-field.invalid textarea")
+          ?.focus();
+        return;
+      }
+      const subject = `${typeEl.value} inquiry — ${name.value.trim()}`;
+      const body = `${message.value.trim()}\n\n— ${name.value.trim()}\n${email.value.trim()}`;
+      window.location.href = `mailto:${TO}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      sent.hidden = false;
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initInquire, { once: true });
+  } else {
+    initInquire();
+  }
+  document.addEventListener("astro:page-load", initInquire);
+</script>

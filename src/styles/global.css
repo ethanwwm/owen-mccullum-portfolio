@@ -1073,6 +1073,134 @@ html.js .wordmark.wm-done .wm-l {
   color: var(--mute);
 }
 
+/* Contact: inquiry form + details */
+.contact-layout {
+  display: grid;
+  grid-template-columns: 1.25fr 0.75fr;
+  gap: 72px;
+  align-items: start;
+}
+.contact-aside {
+  display: grid;
+  gap: 4px;
+}
+.contact-aside .contact-block:not(:last-child) {
+  margin-bottom: 8px;
+}
+
+.inquire {
+  display: grid;
+  gap: 26px;
+  max-width: 560px;
+}
+.inq-eyebrow {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin: 0;
+}
+.inq-field {
+  display: grid;
+  gap: 8px;
+}
+.inq-field label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--mute);
+}
+.inq-field input,
+.inq-field textarea,
+.inq-field select {
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: 16px;
+  color: var(--ink);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  padding: 9px 0;
+  width: 100%;
+  border-radius: 0;
+  transition: border-color 0.25s ease;
+}
+.inq-field textarea {
+  resize: vertical;
+  min-height: 96px;
+  line-height: 1.5;
+}
+.inq-field select {
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  /* minimal chevron */
+  background-image: linear-gradient(45deg, transparent 50%, var(--mute) 50%),
+    linear-gradient(135deg, var(--mute) 50%, transparent 50%);
+  background-position:
+    calc(100% - 9px) 16px,
+    calc(100% - 4px) 16px;
+  background-size:
+    5px 5px,
+    5px 5px;
+  background-repeat: no-repeat;
+}
+.inq-field input:focus,
+.inq-field textarea:focus,
+.inq-field select:focus {
+  outline: none;
+  border-bottom-color: var(--ink);
+}
+.inq-field.invalid input,
+.inq-field.invalid textarea {
+  border-bottom-color: #b3261e;
+}
+.inq-err {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  color: #b3261e;
+  min-height: 13px;
+}
+.inq-submit {
+  justify-self: start;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--ink);
+  border: 0;
+  padding: 15px 30px;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+.inq-submit:hover {
+  opacity: 0.85;
+}
+.inq-submit:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+.inq-note,
+.inq-sent {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  line-height: 1.6;
+  color: var(--mute);
+  margin: 0;
+}
+.inq-note a,
+.inq-sent a {
+  color: var(--ink);
+}
+.inq-sent {
+  color: var(--ink);
+}
+
 @media (max-width: 860px) {
   .series-head {
     grid-template-columns: 1fr;
@@ -1091,6 +1219,10 @@ html.js .wordmark.wm-done .wm-l {
   .contact-grid {
     grid-template-columns: 1fr;
     gap: 40px;
+  }
+  .contact-layout {
+    grid-template-columns: 1fr;
+    gap: 56px;
   }
 }
 
