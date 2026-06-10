@@ -44,7 +44,14 @@ import { series } from "../data/photos";
         const reduce = window.matchMedia(
           "(prefers-reduced-motion: reduce)",
         ).matches;
-        const y = target.getBoundingClientRect().top + window.scrollY - 90;
+        // Offset for the sticky nav, plus the horizontal chapter bar when it's
+        // shown (narrow screens); on the wide-screen rail there's no bar.
+        const isRail = window.matchMedia("(min-width: 1580px)").matches;
+        const header = document.querySelector<HTMLElement>(".site-header");
+        const headerH = header ? header.offsetHeight : 78;
+        const barH = isRail ? 0 : nav.offsetHeight || 44;
+        const offset = headerH + barH + 12;
+        const y = target.getBoundingClientRect().top + window.scrollY - offset;
         window.scrollTo({ top: y, behavior: reduce ? "auto" : "smooth" });
       });
     });

@@ -22,6 +22,8 @@ export interface Photo {
   span: PhotoSpan;
   /** Aspect-ratio treatment */
   shape: PhotoShape;
+  /** Available as a print (only photos with no identifiable likeness) */
+  print?: boolean;
 }
 
 export interface Series {
@@ -63,8 +65,8 @@ export const photos: Photo[] = [
   { file: "corner-sermon.jpg", title: "Street preachers", location: "Washington, D.C. — 2025", series: "portraits", span: 4, shape: "port" },
   { file: "the-other-camera.jpg", title: "The other camera", location: "Washington, D.C. — 2025", series: "portraits", span: 4, shape: "port" },
   { file: "the-interview.jpg", title: "The interview", location: "Washington, D.C. — 2025", series: "portraits", span: 6, shape: "land" },
-  // the dog (was mislabeled "Float")
-  { file: "float.jpg", title: "Good boy", location: "WorldPride — 2025", series: "portraits", span: 6, shape: "land" },
+  // the dog (was mislabeled "Float") — no identifiable likeness, print-eligible
+  { file: "float.jpg", title: "Good boy", location: "WorldPride — 2025", series: "portraits", span: 6, shape: "land", print: true },
 
   // ── 02 · Streets ──────────────────────────────────────────────────
   { file: "on-the-rail.jpg", title: "On the rail", location: "WorldPride — 2025", series: "streets", span: 12, shape: "feature" },
@@ -73,7 +75,7 @@ export const photos: Photo[] = [
   { file: "among-the-signs.jpg", title: "Cowboy hat", location: "Washington, D.C. — 2025", series: "streets", span: 4, shape: "port" },
   { file: "jesus-saves.jpg", title: "Jesus Saves", location: "Washington, D.C. — 2025", series: "streets", span: 4, shape: "port" },
   { file: "at-the-court.jpg", title: "My body, my choice", location: "Washington, D.C. — 2025", series: "streets", span: 4, shape: "port" },
-  { file: "parked.jpg", title: "Parked", location: "Washington, D.C. — 2025", series: "streets", span: 12, shape: "feature" },
+  { file: "parked.jpg", title: "Parked", location: "Washington, D.C. — 2025", series: "streets", span: 12, shape: "feature", print: true },
   { file: "worldpride.jpg", title: "Veterans against Trump", location: "Washington, D.C. — 2025", series: "streets", span: 6, shape: "land" },
   // the parade float (was mislabeled "Good boy")
   { file: "good-boy.jpg", title: "Float", location: "WorldPride — 2025", series: "streets", span: 6, shape: "land" },
@@ -85,6 +87,11 @@ export const photos: Photo[] = [
 /** Photos for one series, in display order. */
 export function photosBySeries(id: SeriesId): Photo[] {
   return photos.filter((p) => p.series === id);
+}
+
+/** Photos available as prints (no identifiable likeness). */
+export function printPhotos(): Photo[] {
+  return photos.filter((p) => p.print);
 }
 
 /**

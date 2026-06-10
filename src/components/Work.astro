@@ -40,6 +40,7 @@ const lightboxImages: LightboxImage[] = await Promise.all(
       location: p.location,
       width,
       height: Math.round((width * orig.height) / orig.width),
+      print: !!p.print,
     };
   }),
 );
@@ -48,6 +49,18 @@ const indexOf = new Map(ordered.map((p, i) => [p.file, i]));
 ---
 
 <div class="work" id="work">
+  <div class="work-head">
+    <button
+      class="tone-toggle"
+      type="button"
+      role="switch"
+      aria-checked="false"
+      aria-label="Show photographs in color"
+    >
+      <span class="tone-switch" aria-hidden="true"><span class="tone-knob" /></span>
+      <span class="tone-text">Color</span>
+    </button>
+  </div>
   {
     series.map((s) => (
       <section class="series" id={s.id}>
@@ -75,6 +88,12 @@ const indexOf = new Map(ordered.map((p, i) => [p.file, i]));
                   loading="lazy"
                   decoding="async"
                 />
+                {p.print && (
+                  <span class="print-badge">
+                    <span class="print-dot" aria-hidden="true" />
+                    Available as a print
+                  </span>
+                )}
                 <span class="expand-hint" aria-hidden="true">View</span>
               </span>
               <span class="cap">
@@ -105,10 +124,37 @@ const indexOf = new Map(ordered.map((p, i) => [p.file, i]));
       });
     });
   }
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", wirePlates, { once: true });
-  } else {
-    wirePlates();
+  // Black & white ↔ color toggle (persists in localStorage; applied before
+  // paint by the inline head script).
+  function wireToneToggle() {
+    const btn = document.querySelector<HTMLButtonElement>(".tone-toggle");
+    if (!btn || btn.dataset.wired) return;
+    btn.dataset.wired = "1";
+
+    const sync = () => {
+      const on = document.documentElement.classList.contains("color-on");
+      btn.setAttribute("aria-checked", String(on));
+    };
+    sync();
+
+    btn.addEventListener("click", () => {
+      const on = document.documentElement.classList.toggle("color-on");
+      try {
+        localStorage.setItem("tone", on ? "color" : "bw");
+      } catch (e) {}
+      sync();
+    });
   }
-  document.addEventListener("astro:page-load", wirePlates);
+
+  function initWork() {
+    wirePlates();
+    wireToneToggle();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initWork, { once: true });
+  } else {
+    initWork();
+  }
+  document.addEventListener("astro:page-load", initWork);
 </script>

@@ -6,6 +6,7 @@ export interface LightboxImage {
   location: string;
   width: number;
   height: number;
+  print?: boolean;
 }
 
 interface Props {
@@ -164,6 +165,11 @@ export default function Lightbox({ images }: Props) {
         <figcaption class="lb-cap">
           <span class="lb-title">{img.title}</span>
           <span class="lb-meta">{img.location} · Archival pigment print</span>
+          {img.print && (
+            <a class="lb-print" href="/prints">
+              Available as a print →
+            </a>
+          )}
           <span class="lb-count">
             {index! + 1} / {images.length}
           </span>

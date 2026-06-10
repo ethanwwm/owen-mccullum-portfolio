@@ -56,15 +56,28 @@ const EMAIL = "opmccullum@gmail.com";
           <span class="inq-err" aria-live="polite"></span>
         </div>
 
+        {/* honeypot — bots fill this, humans don't */}
+        <input
+          type="text"
+          name="_honey"
+          tabindex="-1"
+          autocomplete="off"
+          aria-hidden="true"
+          style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0"
+        />
+
         <button class="inq-submit" type="submit">Send inquiry</button>
         <p class="inq-note">
-          Opens your email app, addressed to Owen. Prefer to write directly?
+          Sent straight to Owen's inbox. Prefer to write directly?
           <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
         </p>
 
-        <p class="inq-sent" role="status" hidden>
-          Opening your email app… if nothing happens, write to
-          <a href={`mailto:${EMAIL}`}>{EMAIL}</a>.
+        <p class="inq-feedback inq-sent" role="status" hidden>
+          Thanks — your inquiry is on its way to Owen. He'll be in touch soon.
+        </p>
+        <p class="inq-feedback inq-error" role="alert" hidden>
+          Something went wrong. Please email
+          <a href={`mailto:${EMAIL}`}>{EMAIL}</a> directly.
         </p>
       </form>
 
@@ -110,7 +123,11 @@ const EMAIL = "opmccullum@gmail.com";
     const email = form.querySelector<HTMLInputElement>("[name=email]")!;
     const message = form.querySelector<HTMLTextAreaElement>("[name=message]")!;
     const typeEl = form.querySelector<HTMLSelectElement>("[name=type]")!;
+    const honey = form.querySelector<HTMLInputElement>("[name=_honey]")!;
+    const submit = form.querySelector<HTMLButtonElement>(".inq-submit")!;
+    const note = form.querySelector<HTMLElement>(".inq-note")!;
     const sent = form.querySelector<HTMLElement>(".inq-sent")!;
+    const errorBox = form.querySelector<HTMLElement>(".inq-error")!;
     const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     const setErr = (el: HTMLElement, msg: string) => {
@@ -144,18 +161,56 @@ const EMAIL = "opmccullum@gmail.com";
       }),
     );
 
-    form.addEventListener("submit", (e) => {
+    form.addEventListener("submit", async (e) => {
       e.preventDefault();
+      errorBox.hidden = true;
+      // Honeypot tripped → silently pretend success (it's a bot).
+      if (honey.value) {
+        return;
+      }
       if (!validate()) {
         form
           .querySelector<HTMLElement>(".inq-field.invalid input, .inq-field.invalid textarea")
           ?.focus();
         return;
       }
-      const subject = `${typeEl.value} inquiry — ${name.value.trim()}`;
-      const body = `${message.value.trim()}\n\n— ${name.value.trim()}\n${email.value.trim()}`;
-      window.location.href = `mailto:${TO}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-      sent.hidden = false;
+
+      const original = submit.textContent;
+      submit.disabled = true;
+      submit.textContent = "Sending…";
+
+      try {
+        const res = await fetch(`https://formsubmit.co/ajax/${TO}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            name: name.value.trim(),
+            email: email.value.trim(),
+            "inquiring about": typeEl.value,
+            message: message.value.trim(),
+            _subject: `${typeEl.value} inquiry — ${name.value.trim()} (owenmccullumphoto.com)`,
+            _template: "table",
+            _captcha: "false",
+          }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (res.ok && (data.success === true || data.success === "true")) {
+          // Replace the form with the success note.
+          form
+            .querySelectorAll(".inq-field, .inq-submit, .inq-note")
+            .forEach((el) => ((el as HTMLElement).hidden = true));
+          sent.hidden = false;
+        } else {
+          throw new Error(data.message || "Request failed");
+        }
+      } catch {
+        errorBox.hidden = false;
+        submit.disabled = false;
+        submit.textContent = original;
+      }
     });
   }
 

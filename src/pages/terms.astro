@@ -1,0 +1,132 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+
+const title = "Terms & Conditions — Owen McCullum";
+const description =
+  "Terms and conditions for owenmccullumphoto.com — copyright, prints and licensing, inquiries, third-party services, and site credit.";
+const EMAIL = "opmccullum@gmail.com";
+---
+
+<BaseLayout title={title} description={description}>
+  <Header />
+  <main class="wrap page">
+    <header class="page-head reveal">
+      <p class="page-eyebrow">Terms &amp; Conditions</p>
+      <h1 class="page-title">The fine print.</h1>
+      <p class="page-lede">
+        These terms govern your use of this website and the photographs shown
+        here. By using the site you agree to them. Owen McCullum is based in
+        Washington, D.C.
+      </p>
+    </header>
+
+    <div class="doc">
+      <section class="doc-row reveal">
+        <div class="doc-k"><span class="doc-k-idx">01</span>Copyright</div>
+        <div class="doc-b">
+          <p>
+            All photographs, text, and design on this site are the property of
+            Owen McCullum and are protected by copyright. No image or content may
+            be copied, downloaded, reproduced, screenshotted for republication,
+            or used in any way without prior written permission. All rights are
+            reserved.
+          </p>
+        </div>
+      </section>
+
+      <section class="doc-row reveal">
+        <div class="doc-k"><span class="doc-k-idx">02</span>Prints &amp; licensing</div>
+        <div class="doc-b">
+          <p>
+            Prints are sold and images are licensed under the terms set out on
+            the <a href="/prints">Prints &amp; Licensing</a> page, and any
+            individual written agreement takes precedence. Only photographs
+            offered in the print section are available for purchase; others may
+            depict identifiable people and are not for sale without the
+            necessary releases.
+          </p>
+        </div>
+      </section>
+
+      <section class="doc-row reveal">
+        <div class="doc-k"><span class="doc-k-idx">03</span>Inquiries &amp; your information</div>
+        <div class="doc-b">
+          <p>
+            When you submit the contact form, the details you provide (name,
+            email, and message) are delivered to the studio by a third-party
+            form service solely so Owen can reply. They are not sold or used for
+            marketing. The pricing estimator collects anonymous, aggregate usage
+            data to improve the tool; it does not identify you.
+          </p>
+        </div>
+      </section>
+
+      <section class="doc-row reveal">
+        <div class="doc-k"><span class="doc-k-idx">04</span>Third-party services</div>
+        <div class="doc-b">
+          <p>
+            This site relies on third-party services — including a form-delivery
+            provider for inquiries and an embedded pricing estimator — each
+            governed by its own terms and privacy policy. The studio isn't
+            responsible for the practices of those providers.
+          </p>
+        </div>
+      </section>
+
+      <section class="doc-row reveal">
+        <div class="doc-k"><span class="doc-k-idx">05</span>Accuracy &amp; estimates</div>
+        <div class="doc-b">
+          <p>
+            Pricing shown on the site, including any figure produced by the
+            estimator, is indicative only and not a binding quote. Final pricing,
+            availability, and terms are confirmed in writing before any booking,
+            sale, or license.
+          </p>
+        </div>
+      </section>
+
+      <section class="doc-row reveal">
+        <div class="doc-k"><span class="doc-k-idx">06</span>Liability</div>
+        <div class="doc-b">
+          <p>
+            The site is provided “as is,” without warranties of any kind. To the
+            fullest extent permitted by law, Owen McCullum is not liable for any
+            loss or damage arising from your use of, or inability to use, the
+            site.
+          </p>
+        </div>
+      </section>
+
+      <section class="doc-row reveal">
+        <div class="doc-k"><span class="doc-k-idx">07</span>Governing law &amp; changes</div>
+        <div class="doc-b">
+          <p>
+            These terms are governed by the laws of the District of Columbia.
+            They may be updated from time to time; the version posted here is the
+            one in effect. Questions? Write to
+            <a href={`mailto:${EMAIL}`}>{EMAIL}</a>.
+          </p>
+        </div>
+      </section>
+
+      <section class="doc-row reveal">
+        <div class="doc-k"><span class="doc-k-idx">08</span>Site credit</div>
+        <div class="doc-b">
+          <p>
+            This website was originally designed, developed, and coded by
+            <a href="https://ethanwong.photography" target="_blank" rel="noopener">Ethan W. Photography</a>.
+            The design and code remain the work of its author; the photographs
+            and brand are the property of Owen McCullum.
+          </p>
+          <p class="muted">
+            This page summarizes standard terms for convenience and is not legal
+            advice.
+          </p>
+        </div>
+      </section>
+    </div>
+  </main>
+  <Footer />
+</BaseLayout>

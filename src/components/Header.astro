@@ -167,10 +167,31 @@ const wordmark = (() => {
     document.addEventListener("astro:before-swap", close);
   }
 
+  // Highlight the nav link for the current page (header persists across
+  // View Transitions, so this runs on every navigation).
+  function setActiveNav() {
+    const path = (location.pathname.replace(/\/+$/, "") || "/") + "/";
+    document
+      .querySelectorAll<HTMLAnchorElement>(".site-header nav a")
+      .forEach((a) => {
+        const href = a.getAttribute("href") || "";
+        const active =
+          !href.startsWith("/#") &&
+          href !== "/" &&
+          path.startsWith(href.replace(/\/+$/, "") + "/");
+        a.classList.toggle("active", active);
+        if (active) a.setAttribute("aria-current", "page");
+        else a.removeAttribute("aria-current");
+      });
+  }
+
   startWordmark();
   wireNav();
+  setActiveNav();
   document.addEventListener("astro:page-load", () => {
     startWordmark();
     wireNav();
+    setActiveNav();
   });
+</script>
 </script>

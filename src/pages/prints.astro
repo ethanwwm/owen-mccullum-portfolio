@@ -2,6 +2,10 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
+import { Image } from "astro:assets";
+import { printPhotos, getPhotoImage } from "../data/photos";
+
+const prints = printPhotos();
 
 const title = "Prints & Licensing — Owen McCullum";
 const description =
@@ -33,10 +37,48 @@ const licensing = [
       <p class="page-lede">
         Archival prints of selected photographs are available directly from the
         studio, and most images may be licensed for editorial or commercial use.
-        The terms below govern both. Owen McCullum is based in Washington, D.C.,
-        and ships worldwide.
+        Owen McCullum is based in Washington, D.C., and ships worldwide.
       </p>
     </header>
+
+    {
+      prints.length > 0 && (
+        <section class="prints-store" id="store">
+          <div class="store-head reveal">
+            <h2 class="store-title">Available prints</h2>
+            <p class="store-note">
+              A small, growing selection offered as archival prints. Ordering is
+              arranged personally for now — send an inquiry and you'll get sizes,
+              pricing, and a way to pay. Full terms are below.
+            </p>
+          </div>
+          <div class="store-grid">
+            {prints.map((p) => (
+              <figure class="print-card reveal">
+                <div class="ph">
+                  <Image
+                    src={getPhotoImage(p.file)}
+                    alt={p.title}
+                    widths={[480, 768, 1100]}
+                    sizes="(max-width: 860px) 100vw, 540px"
+                    quality={82}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
+                <figcaption class="print-cap">
+                  <span class="t">{p.title}</span>
+                  <span class="loc">{p.location}</span>
+                  <a class="print-cta" href="/contact">
+                    Inquire to order →
+                  </a>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </section>
+      )
+    }
 
     <div class="doc">
       <!-- PRINTS -->

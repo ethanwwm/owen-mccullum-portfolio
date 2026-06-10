@@ -28,6 +28,10 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
          script fails to run. -->
     <script is:inline>
       document.documentElement.classList.add("js");
+      try {
+        if (localStorage.getItem("tone") === "color")
+          document.documentElement.classList.add("color-on");
+      } catch (e) {}
       setTimeout(function () {
         document
           .querySelectorAll(".wordmark:not(.wm-done)")
