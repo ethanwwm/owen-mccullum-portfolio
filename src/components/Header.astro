@@ -18,7 +18,7 @@ const wordmark = (() => {
 })();
 ---
 
-<header transition:persist>
+<header class="site-header" transition:persist>
   <div class="wrap bar">
     <a class="name wordmark" href="/" aria-label={NAME}>
       {
@@ -138,7 +138,7 @@ const wordmark = (() => {
 
   // --- Mobile navigation (hamburger) ---
   function wireNav() {
-    const header = document.querySelector<HTMLElement>("header");
+    const header = document.querySelector<HTMLElement>(".site-header");
     const btn = header?.querySelector<HTMLButtonElement>(".nav-toggle");
     if (!header || !btn || btn.dataset.wired) return;
     btn.dataset.wired = "1";

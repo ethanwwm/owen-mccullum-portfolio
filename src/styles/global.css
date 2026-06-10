@@ -37,7 +37,7 @@ img {
 }
 
 /* Header */
-header {
+.site-header {
   position: sticky;
   top: 0;
   z-index: 40;
@@ -602,13 +602,13 @@ html.js .wordmark.wm-done .wm-l {
 .nt-bars::after {
   top: 6px;
 }
-header.nav-open .nt-bars {
+.site-header.nav-open .nt-bars {
   background: transparent;
 }
-header.nav-open .nt-bars::before {
+.site-header.nav-open .nt-bars::before {
   transform: translateY(6px) rotate(45deg);
 }
-header.nav-open .nt-bars::after {
+.site-header.nav-open .nt-bars::after {
   transform: translateY(-6px) rotate(-45deg);
 }
 
@@ -633,7 +633,7 @@ header.nav-open .nt-bars::after {
       opacity 0.26s ease,
       transform 0.26s ease;
   }
-  header.nav-open nav {
+  .site-header.nav-open nav {
     opacity: 1;
     transform: none;
     pointer-events: auto;
