@@ -1,0 +1,18 @@
+---
+import { Image } from "astro:assets";
+import hero from "../assets/hero.jpg";
+---
+
+<section class="hero">
+  <figure>
+    <Image
+      src={hero}
+      alt="Inauguration weekend, Washington D.C."
+      widths={[768, 1280, 1900]}
+      sizes="100vw"
+      loading="eager"
+      fetchpriority="high"
+    />
+    <figcaption>Inauguration weekend · Washington, D.C. — 2025</figcaption>
+  </figure>
+</section>

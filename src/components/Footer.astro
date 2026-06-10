@@ -1,0 +1,22 @@
+---
+const links = [
+  { href: "mailto:hello@owenmccullumphoto.com", label: "hello@owenmccullumphoto.com" },
+  { href: "https://instagram.com/owenmccullumphoto", label: "Instagram → @owenmccullumphoto" },
+  { href: "#", label: "Print & licensing" },
+];
+---
+
+<footer id="contact">
+  <div class="wrap">
+    <div class="foot">
+      <h2>Let's make<br />some frames.</h2>
+      <div class="links">
+        {links.map((l) => <a href={l.href}>{l.label}</a>)}
+      </div>
+    </div>
+    <div class="colophon">
+      <span>© 2026 Owen McCullum</span>
+      <span>Washington, D.C.</span>
+    </div>
+  </div>
+</footer>

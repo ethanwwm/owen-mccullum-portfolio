@@ -1,0 +1,16 @@
+---
+const links = [
+  { href: "#work", label: "Work" },
+  { href: "#about", label: "About" },
+  { href: "#contact", label: "Contact" },
+];
+---
+
+<header>
+  <div class="wrap bar">
+    <a class="name" href="#">Owen McCullum</a>
+    <nav>
+      {links.map((l) => <a href={l.href}>{l.label}</a>)}
+    </nav>
+  </div>
+</header>

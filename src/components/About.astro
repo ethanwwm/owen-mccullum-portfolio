@@ -1,0 +1,31 @@
+---
+import { Image } from "astro:assets";
+import portrait from "../assets/portrait.jpg";
+---
+
+<section class="wrap about" id="about">
+  <div class="about-grid">
+    <figure class="portrait">
+      <Image
+        src={portrait}
+        alt="Owen McCullum"
+        widths={[400, 640, 1100]}
+        sizes="(max-width: 860px) 100vw, 480px"
+        loading="lazy"
+      />
+    </figure>
+    <div>
+      <div class="k">About</div>
+      <p>
+        Owen McCullum is a documentary and street photographer working in
+        Washington, D.C., photographing rallies, protests, parades, and the
+        ordinary texture of the capital with available light and a single 35mm
+        prime.
+      </p>
+      <p class="small">
+        Prints and licensing available. Editorial assignments considered case by
+        case.
+      </p>
+    </div>
+  </div>
+</section>
