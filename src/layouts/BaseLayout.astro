@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import { ClientRouter } from "astro:transitions";
 
 interface Props {
   title?: string;
@@ -17,6 +18,13 @@ const {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Mark JS-capable before paint so reveal styles apply with no flash. -->
+    <script is:inline>
+      document.documentElement.classList.add("js");
+    </script>
+
+    <ClientRouter />
     <title>{title}</title>
     <meta name="description" content={description} />
 
@@ -34,5 +42,61 @@ const {
   </head>
   <body>
     <slot />
+
+    <script>
+      // Reveal elements as they scroll into view, for a calm staggered
+      // entrance. Runs on first load and on every View Transitions
+      // navigation (`astro:page-load`).
+      function setupReveal() {
+        const els = Array.from(
+          document.querySelectorAll<HTMLElement>(".reveal:not(.in)"),
+        );
+        if (!els.length) return;
+
+        const show = (el: Element) => el.classList.add("in");
+        const reduce = window.matchMedia(
+          "(prefers-reduced-motion: reduce)",
+        ).matches;
+
+        // No motion / no observer support: show everything immediately.
+        if (reduce || !("IntersectionObserver" in window)) {
+          els.forEach(show);
+          return;
+        }
+
+        const io = new IntersectionObserver(
+          (entries, obs) => {
+            for (const entry of entries) {
+              if (entry.isIntersecting) {
+                show(entry.target);
+                obs.unobserve(entry.target);
+              }
+            }
+          },
+          { rootMargin: "0px 0px -8% 0px", threshold: 0.08 },
+        );
+        els.forEach((el) => io.observe(el));
+
+        // Failsafe: if not a single element has revealed shortly after load,
+        // the observer isn't working (degenerate viewport, odd browser) —
+        // reveal everything so content is never permanently hidden.
+        window.setTimeout(() => {
+          if (!document.querySelector(".reveal.in")) {
+            document.querySelectorAll(".reveal:not(.in)").forEach(show);
+          }
+        }, 1800);
+      }
+
+      // First load (covers the case where astro:page-load is delayed)...
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", setupReveal, {
+          once: true,
+        });
+      } else {
+        setupReveal();
+      }
+      // ...and every client-side navigation.
+      document.addEventListener("astro:page-load", setupReveal);
+    </script>
   </body>
 </html>

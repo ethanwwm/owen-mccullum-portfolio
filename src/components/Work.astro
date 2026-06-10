@@ -1,0 +1,112 @@
+---
+import { Image, getImage } from "astro:assets";
+import {
+  series,
+  photosBySeries,
+  getPhotoImage,
+  type PhotoShape,
+} from "../data/photos";
+import Lightbox, { type LightboxImage } from "./Lightbox";
+
+// Width hints per layout so Astro emits appropriately-sized thumbnails.
+const widthsFor: Record<PhotoShape, number[]> = {
+  feature: [768, 1280, 1900],
+  land: [480, 768, 1100],
+  port: [400, 640, 900],
+};
+const sizesFor: Record<PhotoShape, string> = {
+  feature: "(max-width: 860px) 100vw, 1240px",
+  land: "(max-width: 860px) 100vw, 600px",
+  port: "(max-width: 860px) 100vw, 400px",
+};
+
+// Flatten to on-page order, then build large images for the lightbox.
+// The array index here is the `data-lightbox` index used by each plate.
+const ordered = series.flatMap((s) => photosBySeries(s.id));
+
+const lightboxImages: LightboxImage[] = await Promise.all(
+  ordered.map(async (p) => {
+    const orig = getPhotoImage(p.file);
+    const width = Math.min(2400, orig.width);
+    const big = await getImage({
+      src: orig,
+      width,
+      format: "webp",
+      quality: 82,
+    });
+    return {
+      src: big.src,
+      title: p.title,
+      location: p.location,
+      width,
+      height: Math.round((width * orig.height) / orig.width),
+    };
+  }),
+);
+
+const indexOf = new Map(ordered.map((p, i) => [p.file, i]));
+---
+
+<div class="work" id="work">
+  {
+    series.map((s) => (
+      <section class="series" id={s.id}>
+        <div class="series-head reveal">
+          <span class="series-idx">{s.index}</span>
+          <h2 class="series-title">{s.title}</h2>
+          <p class="series-note">{s.note}</p>
+        </div>
+        <div class="grid">
+          {photosBySeries(s.id).map((p, i) => (
+            <button
+              type="button"
+              class={`plate c${p.span} s-${p.shape} reveal`}
+              style={`--d:${(i % 4) * 90}ms`}
+              data-lightbox={indexOf.get(p.file)}
+              aria-label={`Expand “${p.title}”`}
+            >
+              <span class="ph">
+                <Image
+                  src={getPhotoImage(p.file)}
+                  alt={p.title}
+                  widths={widthsFor[p.shape]}
+                  sizes={sizesFor[p.shape]}
+                  loading="lazy"
+                />
+                <span class="expand-hint" aria-hidden="true">View</span>
+              </span>
+              <span class="cap">
+                <span class="t">{p.title}</span>
+                <span>{p.location}</span>
+              </span>
+            </button>
+          ))}
+        </div>
+      </section>
+    ))
+  }
+
+  <Lightbox client:idle images={lightboxImages} />
+</div>
+
+<script>
+  // Delegate plate clicks to the React lightbox island.
+  function wirePlates() {
+    document.querySelectorAll<HTMLElement>("[data-lightbox]").forEach((el) => {
+      if (el.dataset.lbWired) return;
+      el.dataset.lbWired = "1";
+      el.addEventListener("click", () => {
+        const index = Number(el.dataset.lightbox);
+        window.dispatchEvent(
+          new CustomEvent("lightbox:open", { detail: { index } }),
+        );
+      });
+    });
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", wirePlates, { once: true });
+  } else {
+    wirePlates();
+  }
+  document.addEventListener("astro:page-load", wirePlates);
+</script>

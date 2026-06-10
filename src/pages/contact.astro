@@ -1,0 +1,61 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+
+const title = "Contact — Owen McCullum";
+const description =
+  "Get in touch with Owen McCullum — documentary & street photographer based in Washington, D.C. Prints, licensing, and editorial assignments.";
+
+const EMAIL = "hello@owenmccullumphoto.com";
+---
+
+<BaseLayout title={title} description={description}>
+  <Header />
+  <main class="wrap page">
+    <header class="page-head reveal">
+      <p class="page-eyebrow">Contact</p>
+      <h1 class="page-title">Let's make some frames.</h1>
+      <p class="page-lede">
+        For prints, licensing, editorial assignments, or just to say hello —
+        the quickest way to reach the studio is by email. Based in Washington,
+        D.C.; available for work throughout the DMV and beyond.
+      </p>
+    </header>
+
+    <div class="contact-grid">
+      <div class="contact-block reveal">
+        <p class="ck">Email</p>
+        <a class="big" href={`mailto:${EMAIL}`}>{EMAIL}</a>
+        <p>
+          For licensing or print orders, a short note on the image and intended
+          use will get you a quote fastest.
+        </p>
+      </div>
+
+      <div class="contact-block reveal" style="--d:120ms">
+        <p class="ck">Elsewhere</p>
+        <a class="big" href="https://instagram.com/owenhowsitgoin" target="_blank" rel="noopener">
+          Instagram → @owenhowsitgoin
+        </a>
+        <p>New work and work-in-progress posts most weeks.</p>
+      </div>
+
+      <div class="contact-block reveal" style="--d:200ms">
+        <p class="ck">Studio</p>
+        <p class="big">Washington, D.C.</p>
+        <p>
+          Editorial and documentary assignments considered case by case. Prints
+          ship worldwide.
+        </p>
+      </div>
+
+      <div class="contact-block reveal" style="--d:280ms">
+        <p class="ck">Prints &amp; licensing</p>
+        <a class="big" href="/prints">See terms &amp; pricing →</a>
+        <p>Editions, sizes, and full licensing terms.</p>
+      </div>
+    </div>
+  </main>
+  <Footer />
+</BaseLayout>

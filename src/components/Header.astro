@@ -1,14 +1,41 @@
 ---
 const links = [
-  { href: "#work", label: "Work" },
-  { href: "#about", label: "About" },
-  { href: "#contact", label: "Contact" },
+  { href: "/#work", label: "Work" },
+  { href: "/#about", label: "About" },
+  { href: "/prints", label: "Prints" },
+  { href: "/contact", label: "Contact" },
 ];
+
+// Pre-split the wordmark into letters with a running index for the
+// staggered load animation, keeping words unbreakable.
+const NAME = "Owen McCullum";
+const wordmark = (() => {
+  let i = 0;
+  return NAME.split(" ").map((word) => ({
+    word,
+    letters: word.split("").map((ch) => ({ ch, i: i++ })),
+  }));
+})();
 ---
 
-<header>
+<header transition:persist>
   <div class="wrap bar">
-    <a class="name" href="#">Owen McCullum</a>
+    <a class="name wordmark" href="/" aria-label={NAME}>
+      {
+        wordmark.map((w, wi) => (
+          <Fragment>
+            {wi > 0 && <span class="wm-space" aria-hidden="true">&nbsp;</span>}
+            <span class="wm-word">
+              {w.letters.map(({ ch, i }) => (
+                <span class="wm-l" style={`--i:${i}`} aria-hidden="true">
+                  {ch}
+                </span>
+              ))}
+            </span>
+          </Fragment>
+        ))
+      }
+    </a>
     <nav>
       {links.map((l) => <a href={l.href}>{l.label}</a>)}
     </nav>

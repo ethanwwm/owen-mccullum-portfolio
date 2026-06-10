@@ -1,16 +1,17 @@
 ---
 const links = [
   { href: "mailto:hello@owenmccullumphoto.com", label: "hello@owenmccullumphoto.com" },
-  { href: "https://instagram.com/owenmccullumphoto", label: "Instagram → @owenmccullumphoto" },
-  { href: "#", label: "Print & licensing" },
+  { href: "https://instagram.com/owenhowsitgoin", label: "Instagram → @owenhowsitgoin" },
+  { href: "/prints", label: "Print & licensing" },
+  { href: "/contact", label: "Contact" },
 ];
 ---
 
 <footer id="contact">
   <div class="wrap">
     <div class="foot">
-      <h2>Let's make<br />some frames.</h2>
-      <div class="links">
+      <h2 class="reveal">Let's make<br />some frames.</h2>
+      <div class="links reveal" style="--d:140ms">
         {links.map((l) => <a href={l.href}>{l.label}</a>)}
       </div>
     </div>
