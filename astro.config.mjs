@@ -8,7 +8,9 @@ import react from "@astrojs/react";
 // When a feature needs a server (forms, on-demand rendering), add
 // `@astrojs/vercel` and switch `output` to "server".
 export default defineConfig({
-  site: "https://owenmccullumphoto.com",
+  // The live origin — used to build absolute URLs (og:image, canonical).
+  // Update this when a custom domain is connected.
+  site: "https://owen-mccullum-portfolio.vercel.app",
   integrations: [react()],
   image: {
     // Generate modern, well-compressed formats from the source JPEGs.

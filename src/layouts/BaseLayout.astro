@@ -11,6 +11,10 @@ const {
   title = "Owen McCullum — Documentary & Street Photography",
   description = "Documentary and street photography from Washington, D.C. by Owen McCullum — rallies, protests, parades, and the ordinary texture of the capital.",
 } = Astro.props;
+
+// Absolute URLs for link-preview cards (iMessage, Slack, Twitter, etc.).
+const ogImage = new URL("/og.jpg", Astro.site).href;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
 ---
 
 <!doctype html>
@@ -41,11 +45,24 @@ const {
     <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta name="theme-color" content="#16140F" />
+    <link rel="canonical" href={canonical} />
 
-    <!-- Open Graph -->
+    <!-- Open Graph / link-preview card -->
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Owen McCullum" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Owen McCullum — documentary & street photography, Washington, D.C." />
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
