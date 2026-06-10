@@ -57,26 +57,41 @@ import { series } from "../data/photos";
     });
 
     // Show the rail only while the gallery is on screen (hidden on the
-    // slideshow above and the about/footer below).
+    // slideshow above and the about/footer below). Clear any highlight when
+    // the gallery isn't in focus.
     new IntersectionObserver(
       (entries) =>
-        entries.forEach((e) =>
-          nav.classList.toggle("visible", e.isIntersecting),
-        ),
+        entries.forEach((e) => {
+          nav.classList.toggle("visible", e.isIntersecting);
+          if (!e.isIntersecting)
+            links.forEach((a) => a.classList.remove("active"));
+        }),
       { threshold: 0 },
     ).observe(work);
 
-    // Highlight the series passing through the middle of the viewport.
+    // Highlight the series passing through the middle of the viewport — and
+    // clear the highlight entirely once no series is in focus (e.g. in About).
+    const inBand = new Set<string>();
     const spy = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
-          if (e.isIntersecting) {
-            const id = (e.target as HTMLElement).id;
-            links.forEach((a) =>
-              a.classList.toggle("active", a.dataset.chapter === id),
-            );
-          }
+          const id = (e.target as HTMLElement).id;
+          if (e.isIntersecting) inBand.add(id);
+          else inBand.delete(id);
         });
+        let activeId: string | null = null;
+        for (const s of sections) {
+          if (inBand.has(s.id)) {
+            activeId = s.id;
+            break;
+          }
+        }
+        links.forEach((a) =>
+          a.classList.toggle(
+            "active",
+            !!activeId && a.dataset.chapter === activeId,
+          ),
+        );
       },
       { rootMargin: "-45% 0px -50% 0px", threshold: 0 },
     );

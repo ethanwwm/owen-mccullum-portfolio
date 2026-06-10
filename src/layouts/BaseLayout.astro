@@ -32,6 +32,14 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
         if (localStorage.getItem("tone") === "color")
           document.documentElement.classList.add("color-on");
       } catch (e) {}
+      // Deter casual image saving: block right-click "Save image" and drag on
+      // images. Document-level so it persists across View Transitions.
+      document.addEventListener("contextmenu", function (e) {
+        if (e.target && e.target.tagName === "IMG") e.preventDefault();
+      });
+      document.addEventListener("dragstart", function (e) {
+        if (e.target && e.target.tagName === "IMG") e.preventDefault();
+      });
       setTimeout(function () {
         document
           .querySelectorAll(".wordmark:not(.wm-done)")

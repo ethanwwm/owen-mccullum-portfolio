@@ -28,6 +28,10 @@ body {
 
 img {
   display: block;
+  /* Deterrents against casual saving/dragging (not foolproof). */
+  -webkit-user-drag: none;
+  -webkit-touch-callout: none;
+  user-select: none;
 }
 
 .wrap {
@@ -62,12 +66,12 @@ img {
   color: var(--ink);
 }
 
-nav {
+.site-header nav {
   display: flex;
   gap: 34px;
 }
 
-nav a {
+.site-header nav a {
   font-family: var(--mono);
   font-size: 12px;
   letter-spacing: 0.08em;
@@ -77,7 +81,7 @@ nav a {
   transition: color 0.25s;
 }
 
-nav a:hover {
+.site-header nav a:hover {
   color: var(--ink);
 }
 
@@ -452,7 +456,7 @@ a:focus-visible,
   .bar {
     height: 64px;
   }
-  nav {
+  .site-header nav {
     gap: 20px;
   }
   .hero-slides {
@@ -675,7 +679,7 @@ html.js .wordmark.wm-done .wm-l {
   .nav-toggle {
     display: inline-flex;
   }
-  nav {
+  .site-header nav {
     position: absolute;
     top: 100%;
     left: 0;
@@ -697,12 +701,12 @@ html.js .wordmark.wm-done .wm-l {
     transform: none;
     pointer-events: auto;
   }
-  nav a {
+  .site-header nav a {
     padding: 15px 2px;
     font-size: 13px;
     border-bottom: 1px solid var(--line);
   }
-  nav a:last-child {
+  .site-header nav a:last-child {
     border-bottom: 0;
   }
 }
@@ -749,6 +753,11 @@ html.js .wordmark.wm-done .wm-l {
   max-width: 1320px;
   margin: 0 auto;
   padding: 0 22px;
+  height: 46px;
+  display: flex;
+  align-items: stretch;
+}
+.chapters-list li {
   display: flex;
 }
 .chapter {
@@ -756,7 +765,7 @@ html.js .wordmark.wm-done .wm-l {
   align-items: center;
   gap: 7px;
   margin-right: 26px;
-  padding: 13px 0;
+  padding: 0;
   border-bottom: 2px solid transparent;
   font-family: var(--mono);
   font-size: 11px;
@@ -809,9 +818,13 @@ html.js .wordmark.wm-done .wm-l {
   .chapters-list {
     display: grid;
     gap: 18px;
+    height: auto;
     max-width: none;
     margin: 0;
     padding: 0;
+  }
+  .chapters-list li {
+    display: block;
   }
   .chapter {
     margin: 0;
@@ -1570,8 +1583,6 @@ html.js .wordmark.wm-done .wm-l {
   margin-bottom: 64px;
 }
 .store-head {
-  border-top: 1px solid var(--line);
-  padding-top: 20px;
   margin-bottom: 40px;
 }
 .store-title {
@@ -1652,11 +1663,10 @@ html.js .wordmark.wm-done .wm-l {
 .colophon-credit {
   text-align: right;
 }
+/* Match the site's standard links (nav / footer): mute → ink, no underline. */
 .colophon a {
   color: var(--mute);
-  text-decoration: underline;
-  text-underline-offset: 2px;
-  text-decoration-color: var(--line);
+  text-decoration: none;
   transition: color 0.25s ease;
 }
 .colophon a:hover {
