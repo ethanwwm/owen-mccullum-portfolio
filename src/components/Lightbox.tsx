@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export interface LightboxImage {
   src: string;
@@ -24,6 +24,7 @@ interface Props {
 export default function Lightbox({ images }: Props) {
   const [index, setIndex] = useState<number | null>(null);
   const open = index !== null;
+  const touchStart = useRef<{ x: number; y: number } | null>(null);
 
   const close = useCallback(() => setIndex(null), []);
   const prev = useCallback(
@@ -88,7 +89,26 @@ export default function Lightbox({ images }: Props) {
         ←
       </button>
 
-      <figure class="lb-stage" onClick={(e) => e.stopPropagation()}>
+      <figure
+        class="lb-stage"
+        onClick={(e) => e.stopPropagation()}
+        onTouchStart={(e) => {
+          const t = e.touches[0];
+          touchStart.current = { x: t.clientX, y: t.clientY };
+        }}
+        onTouchEnd={(e) => {
+          const start = touchStart.current;
+          touchStart.current = null;
+          if (!start) return;
+          const t = e.changedTouches[0];
+          const dx = t.clientX - start.x;
+          const dy = t.clientY - start.y;
+          if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy)) {
+            if (dx < 0) next();
+            else prev();
+          }
+        }}
+      >
         <img
           class="lb-img"
           src={img.src}

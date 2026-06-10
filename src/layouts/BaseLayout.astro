@@ -19,9 +19,18 @@ const {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <!-- Mark JS-capable before paint so reveal styles apply with no flash. -->
+    <!-- Mark JS-capable before paint so reveal styles apply with no flash.
+         Failsafe: ensure the wordmark is never left hidden if its typewriter
+         script fails to run. -->
     <script is:inline>
       document.documentElement.classList.add("js");
+      setTimeout(function () {
+        document
+          .querySelectorAll(".wordmark:not(.wm-done)")
+          .forEach(function (w) {
+            w.classList.add("wm-done");
+          });
+      }, 2600);
     </script>
 
     <ClientRouter />

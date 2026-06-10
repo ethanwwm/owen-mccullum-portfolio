@@ -89,6 +89,7 @@ nav a:hover {
 .hero figure {
   margin: 0;
   position: relative;
+  overflow: hidden; /* contain the settle-in scale so it never causes scroll */
 }
 
 .hero img {
@@ -373,12 +374,6 @@ a:focus-visible,
   }
 }
 
-@media (max-width: 560px) {
-  nav a:nth-child(2) {
-    display: none;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   * {
     transition: none !important;
@@ -470,18 +465,123 @@ html.js .hero img {
 }
 .wm-l {
   display: inline-block;
-  will-change: transform, opacity;
+  text-align: center;
+  overflow: hidden;
 }
+/* Letters are hidden until the typewriter types them in (JS-enhanced only) */
 html.js .wm-l {
   opacity: 0;
-  transform: translateY(0.42em);
-  animation: wm-in 0.62s cubic-bezier(0.2, 0.7, 0.2, 1) both;
-  animation-delay: calc(var(--i) * 42ms + 120ms);
 }
-@keyframes wm-in {
-  to {
+html.js .wm-l.on,
+html.js .wordmark.wm-done .wm-l {
+  opacity: 1;
+}
+/* Blinking caret on the letter currently being typed (box-shadow keeps it
+   outside the box so it never shifts layout) */
+.wm-l.caret {
+  box-shadow: 2px 0 0 currentColor;
+}
+.wordmark.typing .wm-l.caret {
+  animation: wm-caret 0.85s steps(1) infinite;
+}
+@keyframes wm-caret {
+  50% {
+    box-shadow: 2px 0 0 transparent;
+  }
+}
+
+/* ----------------------------------------------------------------------------
+   Header: hamburger + mobile navigation
+---------------------------------------------------------------------------- */
+.bar {
+  position: relative;
+}
+.nav-toggle {
+  display: none;
+  appearance: none;
+  -webkit-appearance: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin-right: -10px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  cursor: pointer;
+}
+.nt-bars,
+.nt-bars::before,
+.nt-bars::after {
+  display: block;
+  width: 22px;
+  height: 1.5px;
+  background: currentColor;
+  transition:
+    transform 0.28s ease,
+    background 0.2s ease;
+}
+.nt-bars {
+  position: relative;
+}
+.nt-bars::before,
+.nt-bars::after {
+  content: "";
+  position: absolute;
+  left: 0;
+}
+.nt-bars::before {
+  top: -6px;
+}
+.nt-bars::after {
+  top: 6px;
+}
+header.nav-open .nt-bars {
+  background: transparent;
+}
+header.nav-open .nt-bars::before {
+  transform: translateY(6px) rotate(45deg);
+}
+header.nav-open .nt-bars::after {
+  transform: translateY(-6px) rotate(-45deg);
+}
+
+@media (max-width: 700px) {
+  .nav-toggle {
+    display: inline-flex;
+  }
+  nav {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    gap: 0;
+    padding: 6px 22px 16px;
+    background: rgba(250, 250, 247, 0.97);
+    backdrop-filter: blur(8px);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+    transition:
+      opacity 0.26s ease,
+      transform 0.26s ease;
+  }
+  header.nav-open nav {
     opacity: 1;
     transform: none;
+    pointer-events: auto;
+  }
+  nav a {
+    padding: 15px 2px;
+    font-size: 13px;
+    border-bottom: 1px solid var(--line);
+  }
+  nav a:last-child {
+    border-bottom: 0;
   }
 }
 
@@ -910,7 +1010,10 @@ html.js .wm-l {
 @media (prefers-reduced-motion: reduce) {
   html.js .wm-l {
     opacity: 1 !important;
-    transform: none !important;
+    animation: none !important;
+  }
+  .wm-l.caret {
+    box-shadow: none !important;
     animation: none !important;
   }
   .lb,
