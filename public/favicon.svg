@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="OM monogram">
+  <rect width="100" height="100" rx="22" fill="#16140F"/>
+  <rect x="3.5" y="3.5" width="93" height="93" rx="19" fill="none" stroke="#FAFAF7" stroke-opacity="0.14" stroke-width="1"/>
+  <text x="50" y="57" text-anchor="middle" dominant-baseline="middle"
+        font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
+        font-weight="600" font-size="40" letter-spacing="-2" fill="#FAFAF7">OM</text>
+</svg>

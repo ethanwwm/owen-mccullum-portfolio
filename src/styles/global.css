@@ -113,7 +113,9 @@ nav a:hover {
 
 /* Intro */
 .intro {
-  padding: 92px 0 78px;
+  /* vertical only — keep .wrap's horizontal padding intact */
+  padding-top: 92px;
+  padding-bottom: 78px;
 }
 
 .intro .eyebrow {
@@ -229,7 +231,8 @@ nav a:hover {
 
 /* About */
 .about {
-  padding: 104px 0;
+  padding-top: 104px;
+  padding-bottom: 104px;
   border-top: 1px solid var(--line);
   margin-top: 64px;
 }
@@ -458,15 +461,20 @@ html.js .hero img {
 ---------------------------------------------------------------------------- */
 .wordmark {
   display: inline-flex;
-  align-items: baseline;
+  align-items: center;
+  line-height: 1;
 }
 .wm-word {
+  display: inline-flex;
+  align-items: center;
   white-space: nowrap;
+  line-height: 1;
 }
 .wm-l {
   display: inline-block;
   text-align: center;
   overflow: hidden;
+  line-height: 1;
 }
 /* Letters are hidden until the typewriter types them in (JS-enhanced only) */
 html.js .wm-l {
@@ -818,7 +826,9 @@ header.nav-open .nt-bars::after {
 }
 
 .page {
-  padding: 128px 0 40px;
+  /* vertical only — keep .wrap's horizontal padding intact */
+  padding-top: 128px;
+  padding-bottom: 40px;
 }
 .page-head {
   border-bottom: 1px solid var(--line);
@@ -990,12 +1000,13 @@ header.nav-open .nt-bars::after {
 @media (max-width: 860px) {
   .series-head {
     grid-template-columns: 1fr;
-    gap: 6px;
+    gap: 8px;
   }
   .series-idx,
   .series-title,
   .series-note {
     grid-column: 1;
+    grid-row: auto; /* stack instead of overlapping in a single cell */
   }
   .doc-row {
     grid-template-columns: 1fr;
