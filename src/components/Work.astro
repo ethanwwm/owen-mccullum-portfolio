@@ -71,7 +71,9 @@ const indexOf = new Map(ordered.map((p, i) => [p.file, i]));
                   alt={p.title}
                   widths={widthsFor[p.shape]}
                   sizes={sizesFor[p.shape]}
+                  quality={78}
                   loading="lazy"
+                  decoding="async"
                 />
                 <span class="expand-hint" aria-hidden="true">View</span>
               </span>

@@ -81,42 +81,90 @@ nav a:hover {
   color: var(--ink);
 }
 
-/* Hero */
+/* Hero — cross-dissolving slideshow */
 .hero {
   margin-top: 6px;
   position: relative;
 }
 
-.hero figure {
-  margin: 0;
+.hero-slides {
   position: relative;
-  overflow: hidden; /* contain the settle-in scale so it never causes scroll */
-}
-
-.hero img {
-  width: 100%;
   height: 86vh;
   min-height: 480px;
+  overflow: hidden; /* contain the settle-in scale so it never causes scroll */
+  background: #16140f;
+}
+
+.hero-slide {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.hero-slide.active {
+  opacity: 1;
+}
+.hero-slide img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
 }
 
-.hero figcaption {
+/* Bottom bar holds the caption (left) and minimal frame indicators (right).
+   Flex so a long caption wraps and never collides with the dots. */
+.hero-bar {
   position: absolute;
-  left: 24px;
-  bottom: 22px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 3;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 20px;
+  padding: 0 24px 22px;
+  pointer-events: none;
+}
+.hero-cap {
   font-family: var(--mono);
   font-size: 11px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: #fff;
   text-shadow: 0 1px 14px rgba(0, 0, 0, 0.6);
+  transition: opacity 0.45s ease;
+  max-width: 70%;
+}
+.hero-dots {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+  pointer-events: auto;
+}
+.hero-dot {
+  width: 24px;
+  height: 2px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  transition: background 0.35s ease;
+}
+.hero-dot.on {
+  background: #fff;
+}
+.hero-dot:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 4px;
 }
 
 /* Intro */
 .intro {
   /* vertical only — keep .wrap's horizontal padding intact */
-  padding-top: 92px;
-  padding-bottom: 78px;
+  padding-top: 60px;
+  padding-bottom: 64px;
 }
 
 .intro .eyebrow {
@@ -232,10 +280,10 @@ nav a:hover {
 
 /* About */
 .about {
-  padding-top: 104px;
-  padding-bottom: 104px;
+  padding-top: 72px;
+  padding-bottom: 88px;
   border-top: 1px solid var(--line);
-  margin-top: 64px;
+  margin-top: 56px;
 }
 
 .about-grid {
@@ -351,8 +399,16 @@ a:focus-visible,
   nav {
     gap: 20px;
   }
-  .hero img {
+  .hero-slides {
     height: 64vh;
+  }
+  .hero-bar {
+    padding: 0 22px 18px;
+  }
+  .hero-cap {
+    max-width: 62%;
+    font-size: 10px;
+    letter-spacing: 0.1em;
   }
   .c4,
   .c6,
@@ -424,7 +480,7 @@ html.js .reveal.in {
 }
 
 /* Hero settles in on first paint */
-html.js .hero img {
+html.js .hero-slides {
   animation: hero-settle 1.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
@@ -452,7 +508,7 @@ html.js .hero img {
     opacity: 1 !important;
     transform: none !important;
   }
-  html.js .hero img {
+  html.js .hero-slides {
     animation: none !important;
   }
 }
@@ -653,6 +709,11 @@ header.nav-open .nt-bars::after {
   font: inherit;
   text-align: left;
   cursor: zoom-in;
+  /* Let the browser skip rendering/decoding plates while they're off-screen,
+     keeping memory low on this image-heavy page. `auto` makes it remember
+     each plate's real height after first paint, so scrolling stays smooth. */
+  content-visibility: auto;
+  contain-intrinsic-size: auto 480px;
 }
 .plate .ph {
   display: block;
@@ -842,7 +903,7 @@ header.nav-open .nt-bars::after {
 
 .page {
   /* vertical only — keep .wrap's horizontal padding intact */
-  padding-top: 128px;
+  padding-top: clamp(36px, 5vw, 56px);
   padding-bottom: 40px;
 }
 .page-head {
