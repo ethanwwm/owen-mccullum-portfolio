@@ -2,6 +2,7 @@
 const links = [
   { href: "/#work", label: "Work" },
   { href: "/#about", label: "About" },
+  { href: "/pricing", label: "Pricing", reload: true },
   { href: "/prints", label: "Prints" },
   { href: "/contact", label: "Contact" },
 ];
@@ -46,7 +47,13 @@ const wordmark = (() => {
     </button>
 
     <nav id="site-nav">
-      {links.map((l) => <a href={l.href}>{l.label}</a>)}
+      {
+        links.map((l) => (
+          <a href={l.href} data-astro-reload={l.reload}>
+            {l.label}
+          </a>
+        ))
+      }
     </nav>
   </div>
 </header>

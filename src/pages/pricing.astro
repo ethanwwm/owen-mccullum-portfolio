@@ -1,0 +1,30 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+
+const title = "Pricing — Owen McCullum";
+const description =
+  "Build an estimate for a documentary or portrait session with Owen McCullum, Washington, D.C. — choose your session type, date, and add-ons for a real-time quote.";
+---
+
+<BaseLayout title={title} description={description}>
+  <Header />
+  <main class="wrap page">
+    <header class="page-head reveal">
+      <p class="page-eyebrow">Pricing</p>
+      <h1 class="page-title">Plan your shoot.</h1>
+      <p class="page-lede">
+        Choose a session type, pick a date, and add any extras for a real-time
+        estimate. For archival prints and image licensing, see
+        <a href="/prints">Prints</a>.
+      </p>
+    </header>
+
+    <div class="pricing-widget">
+      <div id="tali-widget"></div>
+      <script is:inline src="https://tali.so/embed/efac367f-e912-405e-b2e5-841b0505319d.js"></script>
+    </div>
+  </main>
+  <Footer />
+</BaseLayout>

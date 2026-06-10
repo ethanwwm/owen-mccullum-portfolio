@@ -996,6 +996,23 @@ html.js .wordmark.wm-done .wm-l {
   line-height: 1.5;
   font-weight: 300;
 }
+.page-lede a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--line);
+  transition: text-decoration-color 0.25s ease;
+}
+.page-lede a:hover {
+  text-decoration-color: var(--ink);
+}
+
+/* Pricing widget (third-party Tali embed; renders into its own shadow DOM) */
+.pricing-widget {
+  max-width: 820px;
+  margin: 8px auto 0;
+  min-height: 360px;
+}
 
 /* Document layout: two-column rows of label + body */
 .doc {

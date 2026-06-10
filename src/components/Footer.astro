@@ -2,6 +2,7 @@
 const links = [
   { href: "mailto:opmccullum@gmail.com", label: "opmccullum@gmail.com" },
   { href: "https://instagram.com/owenhowsitgoin", label: "Instagram → @owenhowsitgoin" },
+  { href: "/pricing", label: "Pricing", reload: true },
   { href: "/prints", label: "Print & licensing" },
   { href: "/contact", label: "Contact" },
 ];
@@ -12,7 +13,7 @@ const links = [
     <div class="foot">
       <h2 class="reveal">Let's make<br />some frames.</h2>
       <div class="links reveal" style="--d:140ms">
-        {links.map((l) => <a href={l.href}>{l.label}</a>)}
+        {links.map((l) => <a href={l.href} data-astro-reload={l.reload}>{l.label}</a>)}
       </div>
     </div>
     <div class="colophon">
