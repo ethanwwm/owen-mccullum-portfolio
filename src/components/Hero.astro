@@ -9,11 +9,11 @@ import coldSnap from "../assets/photos/cold-snap.jpg";
 // A slow cross-dissolve between a handful of the strongest frames — like
 // slides advancing in a gallery projection.
 const slides = [
-  { img: hero, alt: "Inauguration weekend, Washington, D.C.", caption: "Inauguration weekend · Washington, D.C. — 2025" },
-  { img: onTheRail, alt: "On the rail, WorldPride", caption: "WorldPride · Washington, D.C. — 2025" },
-  { img: parked, alt: "Parked car, Washington, D.C.", caption: "Parked · Washington, D.C. — 2025" },
-  { img: worldpride, alt: "WorldPride, Washington, D.C.", caption: "WorldPride · Washington, D.C. — 2025" },
-  { img: coldSnap, alt: "Cold snap, Washington, D.C.", caption: "Cold snap · Washington, D.C. — 2025" },
+  { img: hero, alt: "MAGA supporters in the rain, Washington, D.C.", caption: "Inauguration weekend · Washington, D.C. — 2025" },
+  { img: onTheRail, alt: "A man with a handheld rainbow flag at the barricade during WorldPride, Washington, D.C.", caption: "On the rail · WorldPride — 2025" },
+  { img: parked, alt: "A van covered in pro-Trump campaign signage, Washington, D.C.", caption: "Parked · Washington, D.C. — 2025" },
+  { img: worldpride, alt: "A 'Veterans Against Trump' protester holding a U.S. flag outside the Supreme Court, Washington, D.C.", caption: "Veterans against Trump · Washington, D.C. — 2025" },
+  { img: coldSnap, alt: "A man bundled against the cold beside a 'Jesus Saves' banner, Washington, D.C.", caption: "Cold snap · Washington, D.C. — 2025" },
 ];
 ---
 
@@ -38,18 +38,29 @@ const slides = [
 
   <div class="hero-bar">
     <figcaption class="hero-cap">{slides[0].caption}</figcaption>
-    <div class="hero-dots" role="tablist" aria-label="Featured frames">
-      {
-        slides.map((_, i) => (
-          <button
-            type="button"
-            class={`hero-dot${i === 0 ? " on" : ""}`}
-            data-slide={i}
-            aria-label={`Show frame ${i + 1}`}
-            aria-selected={i === 0 ? "true" : "false"}
-          />
-        ))
-      }
+    <div class="hero-controls">
+      <button type="button" class="hero-toggle" aria-label="Pause slideshow" aria-pressed="false">
+        <svg class="icon-pause" viewBox="0 0 10 12" aria-hidden="true">
+          <rect x="0" y="0" width="3" height="12" rx="0.5" />
+          <rect x="7" y="0" width="3" height="12" rx="0.5" />
+        </svg>
+        <svg class="icon-play" viewBox="0 0 10 12" aria-hidden="true">
+          <path d="M0.5 0 L10 6 L0.5 12 Z" />
+        </svg>
+      </button>
+      <div class="hero-dots" role="tablist" aria-label="Featured frames">
+        {
+          slides.map((_, i) => (
+            <button
+              type="button"
+              class={`hero-dot${i === 0 ? " on" : ""}`}
+              data-slide={i}
+              aria-label={`Show frame ${i + 1}`}
+              aria-selected={i === 0 ? "true" : "false"}
+            />
+          ))
+        }
+      </div>
     </div>
   </div>
 </section>
@@ -63,24 +74,14 @@ const slides = [
     const slides = Array.from(hero.querySelectorAll<HTMLElement>(".hero-slide"));
     const dots = Array.from(hero.querySelectorAll<HTMLElement>(".hero-dot"));
     const cap = hero.querySelector<HTMLElement>(".hero-cap");
+    const toggle = hero.querySelector<HTMLButtonElement>(".hero-toggle");
     if (slides.length < 2) return;
     hero.dataset.init = "1";
 
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const INTERVAL = 5500;
+    const INTERVAL = 4000;
     let cur = 0;
-
-    const stop = () => {
-      if (heroTimer) {
-        window.clearInterval(heroTimer);
-        heroTimer = undefined;
-      }
-    };
-    const start = () => {
-      if (reduce) return;
-      stop();
-      heroTimer = window.setInterval(() => go(cur + 1), INTERVAL);
-    };
+    let playing = false;
 
     function go(n: number) {
       cur = (n + slides.length) % slides.length;
@@ -94,24 +95,48 @@ const slides = [
         window.setTimeout(() => {
           cap.textContent = slides[cur].dataset.caption ?? "";
           cap.style.opacity = "1";
-        }, 280);
+        }, 260);
       }
     }
 
+    const stop = () => {
+      if (heroTimer) {
+        window.clearInterval(heroTimer);
+        heroTimer = undefined;
+      }
+    };
+    const play = () => {
+      stop();
+      playing = true;
+      hero.classList.remove("paused");
+      toggle?.setAttribute("aria-label", "Pause slideshow");
+      toggle?.setAttribute("aria-pressed", "false");
+      heroTimer = window.setInterval(() => go(cur + 1), INTERVAL);
+    };
+    const pause = () => {
+      stop();
+      playing = false;
+      hero.classList.add("paused");
+      toggle?.setAttribute("aria-label", "Play slideshow");
+      toggle?.setAttribute("aria-pressed", "true");
+    };
+
+    toggle?.addEventListener("click", () => (playing ? pause() : play()));
     dots.forEach((d, i) =>
       d.addEventListener("click", () => {
         go(i);
-        start();
+        if (playing) play(); // reset the timer on manual selection
       }),
     );
-    hero.addEventListener("mouseenter", stop);
-    hero.addEventListener("mouseleave", start);
-    document.addEventListener("visibilitychange", () =>
-      document.hidden ? stop() : start(),
-    );
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) stop();
+      else if (playing) play();
+    });
     document.addEventListener("astro:before-swap", stop, { once: true });
 
-    start();
+    // Auto-play unless the visitor prefers reduced motion.
+    if (reduce) pause();
+    else play();
   }
 
   if (document.readyState === "loading") {

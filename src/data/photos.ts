@@ -51,28 +51,35 @@ export const series: Series[] = [
 
 // Order within each series is the on-page order. Spans are balanced so each
 // series grid fills cleanly.
+// Captions were swept against the actual images (vision + adversarial
+// verification). Notable corrections: "worldpride.jpg" is a Veterans-Against-
+// Trump protest at the Supreme Court (no Pride content); the dog and the parade
+// float had their "Good boy"/"Float" titles swapped; several others retitled to
+// match what's actually shown.
 export const photos: Photo[] = [
   // ── 01 · Portraits ────────────────────────────────────────────────
   { file: "face-paint.jpg", title: "Face paint", location: "Washington, D.C. — 2025", series: "portraits", span: 12, shape: "feature" },
-  { file: "flag-vendor.jpg", title: "Flag vendor", location: "D.C. — 2025", series: "portraits", span: 4, shape: "port" },
-  { file: "corner-sermon.jpg", title: "Corner sermon", location: "D.C. — 2025", series: "portraits", span: 4, shape: "port" },
-  { file: "the-other-camera.jpg", title: "The other camera", location: "D.C. — 2025", series: "portraits", span: 4, shape: "port" },
-  { file: "the-interview.jpg", title: "The interview", location: "D.C. — 2025", series: "portraits", span: 6, shape: "land" },
-  { file: "good-boy.jpg", title: "Good boy", location: "WorldPride — 2025", series: "portraits", span: 6, shape: "land" },
+  { file: "flag-vendor.jpg", title: "Flag vendor", location: "Washington, D.C. — 2025", series: "portraits", span: 4, shape: "port" },
+  { file: "corner-sermon.jpg", title: "Street preachers", location: "Washington, D.C. — 2025", series: "portraits", span: 4, shape: "port" },
+  { file: "the-other-camera.jpg", title: "The other camera", location: "Washington, D.C. — 2025", series: "portraits", span: 4, shape: "port" },
+  { file: "the-interview.jpg", title: "The interview", location: "Washington, D.C. — 2025", series: "portraits", span: 6, shape: "land" },
+  // the dog (was mislabeled "Float")
+  { file: "float.jpg", title: "Good boy", location: "WorldPride — 2025", series: "portraits", span: 6, shape: "land" },
 
   // ── 02 · Streets ──────────────────────────────────────────────────
-  { file: "on-the-rail.jpg", title: "On the rail", location: "WorldPride, D.C. — 2025", series: "streets", span: 12, shape: "feature" },
-  { file: "on-15th-street.jpg", title: "On 15th Street", location: "D.C. — 2025", series: "streets", span: 6, shape: "land" },
-  { file: "cold-snap.jpg", title: "Cold snap", location: "D.C. — 2025", series: "streets", span: 6, shape: "land" },
-  { file: "among-the-signs.jpg", title: "Among the signs", location: "D.C. — 2025", series: "streets", span: 4, shape: "port" },
-  { file: "jesus-saves.jpg", title: "Jesus Saves", location: "D.C. — 2025", series: "streets", span: 4, shape: "port" },
-  { file: "at-the-court.jpg", title: "At the Court", location: "Washington, D.C. — 2025", series: "streets", span: 4, shape: "port" },
+  { file: "on-the-rail.jpg", title: "On the rail", location: "WorldPride — 2025", series: "streets", span: 12, shape: "feature" },
+  { file: "on-15th-street.jpg", title: "On 15th Street", location: "Washington, D.C. — 2025", series: "streets", span: 6, shape: "land" },
+  { file: "cold-snap.jpg", title: "Cold snap", location: "Washington, D.C. — 2025", series: "streets", span: 6, shape: "land" },
+  { file: "among-the-signs.jpg", title: "Cowboy hat", location: "Washington, D.C. — 2025", series: "streets", span: 4, shape: "port" },
+  { file: "jesus-saves.jpg", title: "Jesus Saves", location: "Washington, D.C. — 2025", series: "streets", span: 4, shape: "port" },
+  { file: "at-the-court.jpg", title: "My body, my choice", location: "Washington, D.C. — 2025", series: "streets", span: 4, shape: "port" },
   { file: "parked.jpg", title: "Parked", location: "Washington, D.C. — 2025", series: "streets", span: 12, shape: "feature" },
-  { file: "worldpride.jpg", title: "WorldPride", location: "D.C. — 2025", series: "streets", span: 6, shape: "land" },
-  { file: "float.jpg", title: "Float", location: "WorldPride — 2025", series: "streets", span: 6, shape: "land" },
-  { file: "after-hours.jpg", title: "After hours", location: "D.C. — 2025", series: "streets", span: 6, shape: "land" },
+  { file: "worldpride.jpg", title: "Veterans against Trump", location: "Washington, D.C. — 2025", series: "streets", span: 6, shape: "land" },
+  // the parade float (was mislabeled "Good boy")
+  { file: "good-boy.jpg", title: "Float", location: "WorldPride — 2025", series: "streets", span: 6, shape: "land" },
+  { file: "after-hours.jpg", title: "After hours", location: "Washington, D.C. — 2025", series: "streets", span: 6, shape: "land" },
   { file: "front-row.jpg", title: "Front row", location: "WorldPride — 2025", series: "streets", span: 6, shape: "land" },
-  { file: "afterparty.jpg", title: "Afterparty", location: "D.C. — 2025", series: "streets", span: 12, shape: "feature" },
+  { file: "afterparty.jpg", title: "Spectators", location: "WorldPride — 2025", series: "streets", span: 12, shape: "feature" },
 ];
 
 /** Photos for one series, in display order. */

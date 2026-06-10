@@ -83,7 +83,6 @@ nav a:hover {
 
 /* Hero — cross-dissolving slideshow */
 .hero {
-  margin-top: 6px;
   position: relative;
 }
 
@@ -100,7 +99,7 @@ nav a:hover {
   inset: 0;
   margin: 0;
   opacity: 0;
-  transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .hero-slide.active {
   opacity: 1;
@@ -136,28 +135,85 @@ nav a:hover {
   transition: opacity 0.45s ease;
   max-width: 70%;
 }
-.hero-dots {
+/* Bottom-right controls: a minimal pause/play toggle + clean tile indicators. */
+.hero-controls {
   display: flex;
-  gap: 8px;
+  align-items: center;
+  gap: 14px;
   flex-shrink: 0;
   pointer-events: auto;
 }
-.hero-dot {
+.hero-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 24px;
-  height: 2px;
+  height: 24px;
   padding: 0;
   border: 0;
-  border-radius: 0;
-  background: rgba(255, 255, 255, 0.4);
+  background: none;
+  color: #fff;
   cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.25s ease;
+}
+.hero-toggle:hover {
+  opacity: 1;
+}
+.hero-toggle svg {
+  display: block;
+  width: 10px;
+  height: 12px;
+  fill: currentColor;
+  filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.5));
+}
+.hero-toggle .icon-play {
+  display: none;
+}
+.hero.paused .hero-toggle .icon-pause {
+  display: none;
+}
+.hero.paused .hero-toggle .icon-play {
+  display: block;
+}
+.hero-toggle:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+
+.hero-dots {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+/* Thin "tile" lines with a taller transparent hit area for easy clicking. */
+.hero-dot {
+  width: 22px;
+  height: 16px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+.hero-dot::before {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.4);
   transition: background 0.35s ease;
 }
-.hero-dot.on {
+.hero-dot.on::before {
   background: #fff;
+}
+.hero-dot:hover::before {
+  background: rgba(255, 255, 255, 0.7);
 }
 .hero-dot:focus-visible {
   outline: 2px solid #fff;
-  outline-offset: 4px;
+  outline-offset: 3px;
 }
 
 /* Intro */
@@ -783,6 +839,11 @@ html.js .wordmark.wm-done .wm-l {
   box-shadow:
     0 30px 90px rgba(0, 0, 0, 0.5),
     0 6px 20px rgba(0, 0, 0, 0.3);
+  /* Hidden until the image has loaded, then it animates in (no snap). */
+  opacity: 0;
+}
+.lb-card.entered {
+  opacity: 1;
   animation: lb-pop 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 @keyframes lb-pop {

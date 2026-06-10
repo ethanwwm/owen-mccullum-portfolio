@@ -23,10 +23,18 @@ interface Props {
 export default function Lightbox({ images }: Props) {
   const [index, setIndex] = useState<number | null>(null);
   const [vp, setVp] = useState({ w: 1280, h: 800 });
+  // `entered` gates the entrance animation: on a fresh open we wait for the
+  // image to finish loading before revealing, so it transitions in rather than
+  // snapping. Left/right navigation keeps `entered` true → instant swap.
+  const [entered, setEntered] = useState(false);
   const open = index !== null;
   const touchStart = useRef<{ x: number; y: number } | null>(null);
+  const imgRef = useRef<HTMLImageElement | null>(null);
 
-  const close = useCallback(() => setIndex(null), []);
+  const close = useCallback(() => {
+    setIndex(null);
+    setEntered(false);
+  }, []);
   const prev = useCallback(
     () => setIndex((i) => (i === null ? i : (i - 1 + images.length) % images.length)),
     [images.length],
@@ -36,15 +44,24 @@ export default function Lightbox({ images }: Props) {
     [images.length],
   );
 
-  // Open requests from the gallery plates.
+  // Open requests from the gallery plates. A fresh open resets `entered` so we
+  // wait for the image before animating in.
   useEffect(() => {
     const onOpen = (e: Event) => {
       const d = (e as CustomEvent<{ index: number }>).detail;
-      if (d && Number.isInteger(d.index)) setIndex(d.index);
+      if (d && Number.isInteger(d.index)) {
+        setEntered(false);
+        setIndex(d.index);
+      }
     };
     window.addEventListener("lightbox:open", onOpen as EventListener);
     return () => window.removeEventListener("lightbox:open", onOpen as EventListener);
   }, []);
+
+  // If the freshly-shown image is already cached, reveal immediately.
+  useEffect(() => {
+    if (index !== null && imgRef.current?.complete) setEntered(true);
+  }, [index]);
 
   // Track viewport so the mat can be sized to fit the photo.
   useEffect(() => {
@@ -112,7 +129,7 @@ export default function Lightbox({ images }: Props) {
       </button>
 
       <figure
-        class="lb-card"
+        class={`lb-card${entered ? " entered" : ""}`}
         style={{ width: `${dispW + frame * 2}px`, padding: `${frame}px ${frame}px 0` }}
         onClick={(e) => e.stopPropagation()}
         onTouchStart={(e) => {
@@ -135,11 +152,14 @@ export default function Lightbox({ images }: Props) {
         <img
           class="lb-img"
           key={img.src}
+          ref={imgRef}
           src={img.src}
           alt={img.title}
           width={img.width}
           height={img.height}
           style={{ width: `${dispW}px`, height: `${dispH}px` }}
+          onLoad={() => setEntered(true)}
+          onError={() => setEntered(true)}
         />
         <figcaption class="lb-cap">
           <span class="lb-title">{img.title}</span>
