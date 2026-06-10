@@ -709,9 +709,91 @@ html.js .wordmark.wm-done .wm-l {
 ---------------------------------------------------------------------------- */
 .series {
   padding-top: 30px;
+  /* offset anchor scroll so the heading clears the sticky nav */
+  scroll-margin-top: 96px;
 }
 .series + .series {
   padding-top: 96px;
+}
+
+/* ----------------------------------------------------------------------------
+   Gallery chapter rail — fixed left-side index, shown over the gallery only,
+   on wide screens where it sits in the margin beside the centered content.
+---------------------------------------------------------------------------- */
+.chapters {
+  position: fixed;
+  left: 28px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 30;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 0.45s ease,
+    visibility 0.45s ease;
+}
+.chapters.visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+.chapters-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 18px;
+}
+.chapter {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--mute);
+  text-decoration: none;
+  transition: color 0.25s ease;
+}
+.chapter:hover,
+.chapter.active {
+  color: var(--ink);
+}
+.chapter-line {
+  display: block;
+  width: 16px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.5;
+  transition:
+    width 0.3s ease,
+    opacity 0.3s ease;
+}
+.chapter:hover .chapter-line,
+.chapter.active .chapter-line {
+  width: 30px;
+  opacity: 1;
+}
+.chapter-idx {
+  font-size: 10px;
+  opacity: 0.7;
+}
+.chapter.active .chapter-idx {
+  opacity: 1;
+}
+/* Only show where there is enough margin beside the centered content for the
+   rail to sit without overlapping the photos. */
+@media (max-width: 1579px) {
+  .chapters {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .chapters {
+    transition: none;
+  }
 }
 
 .series-head {
