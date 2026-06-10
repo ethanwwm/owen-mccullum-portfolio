@@ -13,16 +13,16 @@ interface Props {
 }
 
 /**
- * Full-screen viewer that treats each photograph as an art piece:
- * dark "gallery wall" backdrop, museum placard caption, keyboard
- * navigation, and a calm fade/scale transition.
+ * Full-screen viewer that presents each photograph as a framed print:
+ * a white mat (deeper at the bottom for a museum placard caption) on a dark
+ * gallery-wall backdrop. Keyboard + swipe navigation, scroll lock.
  *
- * Opens in response to a window `lightbox:open` CustomEvent carrying
- * `{ index }` — dispatched by the gallery plate buttons. This keeps the
- * grid server-rendered by Astro while React owns only the overlay.
+ * Opens from a window `lightbox:open` CustomEvent ({ index }) dispatched by
+ * the gallery plate buttons, so the grid stays server-rendered by Astro.
  */
 export default function Lightbox({ images }: Props) {
   const [index, setIndex] = useState<number | null>(null);
+  const [vp, setVp] = useState({ w: 1280, h: 800 });
   const open = index !== null;
   const touchStart = useRef<{ x: number; y: number } | null>(null);
 
@@ -36,14 +36,26 @@ export default function Lightbox({ images }: Props) {
     [images.length],
   );
 
-  // Listen for open requests from the gallery plates.
+  // Open requests from the gallery plates.
   useEffect(() => {
     const onOpen = (e: Event) => {
-      const detail = (e as CustomEvent<{ index: number }>).detail;
-      if (detail && Number.isInteger(detail.index)) setIndex(detail.index);
+      const d = (e as CustomEvent<{ index: number }>).detail;
+      if (d && Number.isInteger(d.index)) setIndex(d.index);
     };
     window.addEventListener("lightbox:open", onOpen as EventListener);
     return () => window.removeEventListener("lightbox:open", onOpen as EventListener);
+  }, []);
+
+  // Track viewport so the mat can be sized to fit the photo.
+  useEffect(() => {
+    const measure = () =>
+      setVp({
+        w: document.documentElement.clientWidth || window.innerWidth,
+        h: document.documentElement.clientHeight || window.innerHeight,
+      });
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
   }, []);
 
   // Keyboard controls + body scroll lock while open.
@@ -66,6 +78,17 @@ export default function Lightbox({ images }: Props) {
   if (!open) return null;
   const img = images[index!];
 
+  // Size the photo to fit the viewport, then frame it with an even white mat.
+  const isPhone = vp.w < 700;
+  const frame = isPhone ? 12 : 18; // top/left/right border
+  const capH = isPhone ? 78 : 96; // reserved height for the caption block
+  const maxCardW = Math.min(vp.w * 0.94, 1180);
+  const availW = maxCardW - frame * 2;
+  const availH = vp.h * 0.9 - frame - capH;
+  const scale = Math.min(availW / img.width, availH / img.height, 1);
+  const dispW = Math.max(1, Math.round(img.width * scale));
+  const dispH = Math.max(1, Math.round(img.height * scale));
+
   return (
     <div
       class="lb"
@@ -77,7 +100,6 @@ export default function Lightbox({ images }: Props) {
       <button class="lb-close" aria-label="Close" onClick={close}>
         ✕
       </button>
-
       <button
         class="lb-nav lb-prev"
         aria-label="Previous"
@@ -86,23 +108,24 @@ export default function Lightbox({ images }: Props) {
           prev();
         }}
       >
-        ←
+        ‹
       </button>
 
       <figure
-        class="lb-stage"
+        class="lb-card"
+        style={{ width: `${dispW + frame * 2}px`, padding: `${frame}px ${frame}px 0` }}
         onClick={(e) => e.stopPropagation()}
         onTouchStart={(e) => {
           const t = e.touches[0];
           touchStart.current = { x: t.clientX, y: t.clientY };
         }}
         onTouchEnd={(e) => {
-          const start = touchStart.current;
+          const s = touchStart.current;
           touchStart.current = null;
-          if (!start) return;
+          if (!s) return;
           const t = e.changedTouches[0];
-          const dx = t.clientX - start.x;
-          const dy = t.clientY - start.y;
+          const dx = t.clientX - s.x;
+          const dy = t.clientY - s.y;
           if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy)) {
             if (dx < 0) next();
             else prev();
@@ -111,18 +134,16 @@ export default function Lightbox({ images }: Props) {
       >
         <img
           class="lb-img"
+          key={img.src}
           src={img.src}
           alt={img.title}
           width={img.width}
           height={img.height}
-          // re-trigger the entrance transition on each navigation
-          key={img.src}
+          style={{ width: `${dispW}px`, height: `${dispH}px` }}
         />
         <figcaption class="lb-cap">
           <span class="lb-title">{img.title}</span>
-          <span class="lb-meta">
-            {img.location} · Archival pigment print
-          </span>
+          <span class="lb-meta">{img.location} · Archival pigment print</span>
           <span class="lb-count">
             {index! + 1} / {images.length}
           </span>
@@ -137,7 +158,7 @@ export default function Lightbox({ images }: Props) {
           next();
         }}
       >
-        →
+        ›
       </button>
     </div>
   );

@@ -86,7 +86,7 @@ const indexOf = new Map(ordered.map((p, i) => [p.file, i]));
     ))
   }
 
-  <Lightbox client:idle images={lightboxImages} />
+  <Lightbox client:load images={lightboxImages} />
 </div>
 
 <script>

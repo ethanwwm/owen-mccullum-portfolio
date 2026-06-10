@@ -41,8 +41,9 @@ header {
   position: sticky;
   top: 0;
   z-index: 40;
-  background: rgba(250, 250, 247, 0.82);
-  backdrop-filter: blur(8px);
+  /* Solid so page content scrolls cleanly behind it (no bleed-through). */
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
 }
 
 .bar {
@@ -567,9 +568,7 @@ header.nav-open .nt-bars::after {
     flex-direction: column;
     gap: 0;
     padding: 6px 22px 16px;
-    background: rgba(250, 250, 247, 0.97);
-    backdrop-filter: blur(8px);
-    border-top: 1px solid var(--line);
+    background: var(--paper);
     border-bottom: 1px solid var(--line);
     opacity: 0;
     transform: translateY(-10px);
@@ -688,7 +687,9 @@ header.nav-open .nt-bars::after {
 }
 
 /* ----------------------------------------------------------------------------
-   Lightbox (full-screen art-piece viewer)
+   Lightbox — each photo presented as a print on a gallery wall.
+   A restrained Polaroid/mat treatment: white card, even border, slightly
+   deeper bottom margin holding the placard caption.
 ---------------------------------------------------------------------------- */
 .lb {
   position: fixed;
@@ -697,81 +698,88 @@ header.nav-open .nt-bars::after {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: clamp(16px, 4vw, 56px);
-  background: rgba(12, 11, 8, 0.94);
-  backdrop-filter: blur(6px);
-  animation: lb-fade 0.35s ease both;
+  padding: 20px;
+  background: rgba(16, 14, 11, 0.92);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  animation: lb-fade 0.3s ease both;
 }
 @keyframes lb-fade {
   from {
     opacity: 0;
   }
 }
-.lb-stage {
-  margin: 0;
+
+/* The white "print" — width/height of the photo are set inline by the
+   component so the mat hugs the image with even borders. */
+.lb-card {
+  position: relative;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  max-width: 100%;
-  max-height: 100%;
+  max-width: 94vw;
+  background: var(--paper);
+  border-radius: 3px;
+  box-shadow:
+    0 30px 90px rgba(0, 0, 0, 0.5),
+    0 6px 20px rgba(0, 0, 0, 0.3);
+  animation: lb-pop 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
-.lb-img {
-  max-width: min(92vw, 1400px);
-  max-height: 80vh;
-  width: auto;
-  height: auto;
-  object-fit: contain;
-  background: #16140f;
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
-  animation: lb-zoom 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
-}
-@keyframes lb-zoom {
+@keyframes lb-pop {
   from {
     opacity: 0;
-    transform: scale(0.985);
+    transform: translateY(10px) scale(0.99);
   }
 }
+.lb-img {
+  display: block;
+  background: #ece9e2;
+}
 .lb-cap {
-  margin-top: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
   text-align: center;
-  color: #edeae2;
+  padding: 16px 14px 18px;
 }
 .lb-title {
   font-family: var(--display);
   font-weight: 500;
-  font-size: 18px;
+  font-size: 16px;
   letter-spacing: -0.01em;
+  color: var(--ink);
 }
 .lb-meta {
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: 10.5px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #9a958a;
+  color: var(--mute);
 }
 .lb-count {
   font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: 0.14em;
-  color: #75716a;
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  color: var(--mute);
+  opacity: 0.7;
+  margin-top: 2px;
 }
+
 .lb-close {
   position: fixed;
-  top: 18px;
-  right: 22px;
+  top: 16px;
+  right: 20px;
   width: 44px;
   height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: none;
   border: 0;
-  color: #edeae2;
+  color: #f2efe8;
   cursor: pointer;
-  font-size: 17px;
-  line-height: 1;
-  opacity: 0.8;
+  font-size: 16px;
+  opacity: 0.75;
   transition: opacity 0.2s ease;
 }
 .lb-close:hover {
@@ -781,36 +789,43 @@ header.nav-open .nt-bars::after {
   position: fixed;
   top: 50%;
   transform: translateY(-50%);
-  width: 56px;
-  height: 56px;
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: none;
   border: 0;
-  color: #edeae2;
+  color: #f2efe8;
   cursor: pointer;
-  font-size: 26px;
-  opacity: 0.55;
+  font-size: 34px;
+  line-height: 1;
+  opacity: 0.6;
   transition: opacity 0.2s ease;
 }
 .lb-nav:hover {
   opacity: 1;
 }
 .lb-prev {
-  left: 10px;
+  left: 6px;
 }
 .lb-next {
-  right: 10px;
+  right: 6px;
 }
 .lb button:focus-visible {
-  outline: 2px solid #edeae2;
+  outline: 2px solid #f2efe8;
   outline-offset: 3px;
 }
-@media (max-width: 640px) {
-  .lb-nav {
-    width: 44px;
-    font-size: 22px;
+@media (max-width: 700px) {
+  .lb {
+    padding: 10px;
   }
-  .lb-img {
-    max-height: 70vh;
+  .lb-nav {
+    width: 40px;
+    font-size: 26px;
+  }
+  .lb-title {
+    font-size: 15px;
   }
 }
 
@@ -1028,7 +1043,7 @@ header.nav-open .nt-bars::after {
     animation: none !important;
   }
   .lb,
-  .lb-img {
+  .lb-card {
     animation: none !important;
   }
 }
