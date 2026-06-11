@@ -984,22 +984,24 @@ html.js .wordmark.wm-done .wm-l {
   box-shadow:
     0 30px 90px rgba(0, 0, 0, 0.5),
     0 6px 20px rgba(0, 0, 0, 0.3);
-  /* Hidden until the image has loaded, then it animates in (no snap). */
-  opacity: 0;
+  /* The photo morphs from its spot in the grid into this card. */
+  view-transition-name: active-photo;
 }
-.lb-card.entered {
-  opacity: 1;
-  animation: lb-pop 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+/* The morph (where supported) drives the entrance; keep it crisp. */
+::view-transition-group(active-photo) {
+  animation-duration: 0.5s;
+  animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1);
 }
-@keyframes lb-pop {
-  from {
-    opacity: 0;
-    transform: translateY(10px) scale(0.99);
-  }
+.lb-photo {
+  /* low-res placeholder sits here while the full image loads (blur-up) */
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+  line-height: 0;
 }
 .lb-img {
   display: block;
-  background: #ece9e2;
+  background: transparent;
 }
 .lb-cap {
   display: flex;
@@ -1601,12 +1603,14 @@ html.js .wordmark.wm-done .wm-l {
   max-width: 58ch;
 }
 .store-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-wrap: wrap;
   gap: 38px 36px;
 }
 .print-card {
   margin: 0;
+  flex: 1 1 340px;
+  max-width: 540px;
 }
 .print-card .ph {
   overflow: hidden;
@@ -1684,4 +1688,41 @@ html.js .wordmark.wm-done .wm-l {
 }
 .inq-error a {
   color: #b3261e;
+}
+
+/* ----------------------------------------------------------------------------
+   Film grain — subtle documentary texture over the browsing experience.
+   Sits below the lightbox (z 100) so inspecting a print stays clean.
+---------------------------------------------------------------------------- */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.45;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.34'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
+}
+
+/* ----------------------------------------------------------------------------
+   Blur-up image loading — a tiny placeholder shows immediately, the full
+   image fades in over it.
+---------------------------------------------------------------------------- */
+.ph,
+.hero-slide {
+  background-size: cover;
+  background-position: center;
+}
+.blurup {
+  opacity: 0;
+  transition: opacity 0.7s ease;
+}
+.blurup.is-loaded {
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .blurup {
+    transition: none;
+  }
 }

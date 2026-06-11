@@ -1,19 +1,22 @@
 ---
 import { Image } from "astro:assets";
-import hero from "../assets/hero.jpg";
+import lqip from "../data/lqip.json";
 import onTheRail from "../assets/photos/on-the-rail.jpg";
-import parked from "../assets/photos/parked.jpg";
-import worldpride from "../assets/photos/worldpride.jpg";
-import coldSnap from "../assets/photos/cold-snap.jpg";
+import frontRow from "../assets/photos/front-row.jpg";
+import jesusSaves from "../assets/photos/jesus-saves.jpg";
+import atTheCourt from "../assets/photos/at-the-court.jpg";
+import afterHours from "../assets/photos/after-hours.jpg";
+
+const lqipMap = lqip as Record<string, string>;
 
 // A slow cross-dissolve between a handful of the strongest frames — like
 // slides advancing in a gallery projection.
 const slides = [
-  { img: hero, alt: "MAGA supporters in the rain, Washington, D.C.", caption: "Inauguration weekend · Washington, D.C. — 2025" },
-  { img: onTheRail, alt: "A man with a handheld rainbow flag at the barricade during WorldPride, Washington, D.C.", caption: "On the rail · WorldPride — 2025" },
-  { img: parked, alt: "A van covered in pro-Trump campaign signage, Washington, D.C.", caption: "Parked · Washington, D.C. — 2025" },
-  { img: worldpride, alt: "A 'Veterans Against Trump' protester holding a U.S. flag outside the Supreme Court, Washington, D.C.", caption: "Veterans against Trump · Washington, D.C. — 2025" },
-  { img: coldSnap, alt: "A man bundled against the cold beside a 'Jesus Saves' banner, Washington, D.C.", caption: "Cold snap · Washington, D.C. — 2025" },
+  { img: onTheRail, file: "on-the-rail.jpg", alt: "A man with a handheld rainbow flag at the barricade during WorldPride, Washington, D.C.", caption: "On the rail · WorldPride — 2025" },
+  { img: frontRow, file: "front-row.jpg", alt: "WorldPride parade crowd at the barricade, Washington, D.C.", caption: "Front row · WorldPride — 2025" },
+  { img: jesusSaves, file: "jesus-saves.jpg", alt: "A man holding a 'Jesus Saves' sign in falling snow, Washington, D.C.", caption: "Jesus Saves · Washington, D.C. — 2025" },
+  { img: atTheCourt, file: "at-the-court.jpg", alt: "A 'My body, my choice' demonstration, Washington, D.C.", caption: "My body, my choice · Washington, D.C. — 2025" },
+  { img: afterHours, file: "after-hours.jpg", alt: "People leaving an evening venue under string lights, Washington, D.C.", caption: "After hours · Washington, D.C. — 2025" },
 ];
 ---
 
@@ -21,8 +24,13 @@ const slides = [
   <div class="hero-slides">
     {
       slides.map((s, i) => (
-        <div class={`hero-slide${i === 0 ? " active" : ""}`} data-caption={s.caption}>
+        <div
+          class={`hero-slide${i === 0 ? " active" : ""}`}
+          data-caption={s.caption}
+          style={`background-image:url("${lqipMap[s.file]}")`}
+        >
           <Image
+            class="blurup"
             src={s.img}
             alt={s.alt}
             widths={[768, 1280, 1900]}

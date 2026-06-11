@@ -7,6 +7,9 @@ import {
   type PhotoShape,
 } from "../data/photos";
 import Lightbox, { type LightboxImage } from "./Lightbox";
+import lqip from "../data/lqip.json";
+
+const lqipMap = lqip as Record<string, string>;
 
 // Width hints per layout so Astro emits appropriately-sized thumbnails.
 const widthsFor: Record<PhotoShape, number[]> = {
@@ -41,6 +44,7 @@ const lightboxImages: LightboxImage[] = await Promise.all(
       width,
       height: Math.round((width * orig.height) / orig.width),
       print: !!p.print,
+      lqip: lqipMap[p.file],
     };
   }),
 );
@@ -78,8 +82,12 @@ const indexOf = new Map(ordered.map((p, i) => [p.file, i]));
               data-lightbox={indexOf.get(p.file)}
               aria-label={`Expand “${p.title}”`}
             >
-              <span class="ph">
+              <span
+                class="ph"
+                style={`background-image:url("${lqipMap[p.file]}")`}
+              >
                 <Image
+                  class="blurup"
                   src={getPhotoImage(p.file)}
                   alt={p.title}
                   widths={widthsFor[p.shape]}
@@ -118,6 +126,9 @@ const indexOf = new Map(ordered.map((p, i) => [p.file, i]));
       el.dataset.lbWired = "1";
       el.addEventListener("click", () => {
         const index = Number(el.dataset.lightbox);
+        // Tag the clicked image so the lightbox can morph out of it.
+        const img = el.querySelector<HTMLElement>("img");
+        if (img) img.style.viewTransitionName = "active-photo";
         window.dispatchEvent(
           new CustomEvent("lightbox:open", { detail: { index } }),
         );

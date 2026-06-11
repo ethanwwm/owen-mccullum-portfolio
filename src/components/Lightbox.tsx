@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 
 export interface LightboxImage {
   src: string;
@@ -7,35 +8,55 @@ export interface LightboxImage {
   width: number;
   height: number;
   print?: boolean;
+  lqip?: string;
 }
 
 interface Props {
   images: LightboxImage[];
 }
 
+/** Clear the view-transition tag from every grid image. */
+function clearGridNames() {
+  document
+    .querySelectorAll<HTMLElement>(".plate img")
+    .forEach((i) => (i.style.viewTransitionName = ""));
+}
+
 /**
- * Full-screen viewer that presents each photograph as a framed print:
- * a white mat (deeper at the bottom for a museum placard caption) on a dark
- * gallery-wall backdrop. Keyboard + swipe navigation, scroll lock.
- *
- * Opens from a window `lightbox:open` CustomEvent ({ index }) dispatched by
- * the gallery plate buttons, so the grid stays server-rendered by Astro.
+ * Full-screen viewer that presents each photograph as a framed print on a dark
+ * gallery wall. Opening/closing morphs the photo to and from its spot in the
+ * grid (View Transitions API, where supported); a low-res placeholder blurs up
+ * to the full image. Keyboard + swipe navigation, scroll lock.
  */
 export default function Lightbox({ images }: Props) {
   const [index, setIndex] = useState<number | null>(null);
   const [vp, setVp] = useState({ w: 1280, h: 800 });
-  // `entered` gates the entrance animation: on a fresh open we wait for the
-  // image to finish loading before revealing, so it transitions in rather than
-  // snapping. Left/right navigation keeps `entered` true → instant swap.
-  const [entered, setEntered] = useState(false);
   const open = index !== null;
   const touchStart = useRef<{ x: number; y: number } | null>(null);
-  const imgRef = useRef<HTMLImageElement | null>(null);
+  const indexRef = useRef<number | null>(null);
+  indexRef.current = index;
+
+  const supportsVT =
+    typeof document !== "undefined" &&
+    typeof (document as any).startViewTransition === "function";
 
   const close = useCallback(() => {
-    setIndex(null);
-    setEntered(false);
-  }, []);
+    const i = indexRef.current;
+    const doClose = () => setIndex(null);
+    if (supportsVT && i != null) {
+      // Tag the current grid image so the card morphs back into it.
+      const gridImg = document.querySelector<HTMLElement>(
+        `.plate[data-lightbox="${i}"] img`,
+      );
+      if (gridImg) gridImg.style.viewTransitionName = "active-photo";
+      (document as any)
+        .startViewTransition(() => flushSync(doClose))
+        .finished.finally(clearGridNames);
+    } else {
+      doClose();
+    }
+  }, [supportsVT]);
+
   const prev = useCallback(
     () => setIndex((i) => (i === null ? i : (i - 1 + images.length) % images.length)),
     [images.length],
@@ -45,24 +66,23 @@ export default function Lightbox({ images }: Props) {
     [images.length],
   );
 
-  // Open requests from the gallery plates. A fresh open resets `entered` so we
-  // wait for the image before animating in.
+  // Open requests from the gallery plates — morph the clicked photo open.
   useEffect(() => {
     const onOpen = (e: Event) => {
       const d = (e as CustomEvent<{ index: number }>).detail;
-      if (d && Number.isInteger(d.index)) {
-        setEntered(false);
-        setIndex(d.index);
+      if (!d || !Number.isInteger(d.index)) return;
+      const doOpen = () => setIndex(d.index);
+      if (supportsVT) {
+        (document as any)
+          .startViewTransition(() => flushSync(doOpen))
+          .finished.finally(clearGridNames);
+      } else {
+        doOpen();
       }
     };
     window.addEventListener("lightbox:open", onOpen as EventListener);
     return () => window.removeEventListener("lightbox:open", onOpen as EventListener);
-  }, []);
-
-  // If the freshly-shown image is already cached, reveal immediately.
-  useEffect(() => {
-    if (index !== null && imgRef.current?.complete) setEntered(true);
-  }, [index]);
+  }, [supportsVT]);
 
   // Track viewport so the mat can be sized to fit the photo.
   useEffect(() => {
@@ -130,7 +150,7 @@ export default function Lightbox({ images }: Props) {
       </button>
 
       <figure
-        class={`lb-card${entered ? " entered" : ""}`}
+        class="lb-card"
         style={{ width: `${dispW + frame * 2}px`, padding: `${frame}px ${frame}px 0` }}
         onClick={(e) => e.stopPropagation()}
         onTouchStart={(e) => {
@@ -150,18 +170,24 @@ export default function Lightbox({ images }: Props) {
           }
         }}
       >
-        <img
-          class="lb-img"
-          key={img.src}
-          ref={imgRef}
-          src={img.src}
-          alt={img.title}
-          width={img.width}
-          height={img.height}
-          style={{ width: `${dispW}px`, height: `${dispH}px` }}
-          onLoad={() => setEntered(true)}
-          onError={() => setEntered(true)}
-        />
+        <div
+          class="lb-photo"
+          style={{
+            width: `${dispW}px`,
+            height: `${dispH}px`,
+            backgroundImage: img.lqip ? `url("${img.lqip}")` : undefined,
+          }}
+        >
+          <img
+            class="lb-img blurup"
+            key={img.src}
+            src={img.src}
+            alt={img.title}
+            width={img.width}
+            height={img.height}
+            style={{ width: `${dispW}px`, height: `${dispH}px` }}
+          />
+        </div>
         <figcaption class="lb-cap">
           <span class="lb-title">{img.title}</span>
           <span class="lb-meta">{img.location} · Archival pigment print</span>

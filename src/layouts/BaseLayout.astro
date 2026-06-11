@@ -40,6 +40,17 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
       document.addEventListener("dragstart", function (e) {
         if (e.target && e.target.tagName === "IMG") e.preventDefault();
       });
+      // Blur-up: fade each image in once it has loaded (capture phase so it
+      // catches load events on images anywhere, including ones added later).
+      document.addEventListener(
+        "load",
+        function (e) {
+          var t = e.target;
+          if (t && t.classList && t.classList.contains("blurup"))
+            t.classList.add("is-loaded");
+        },
+        true,
+      );
       setTimeout(function () {
         document
           .querySelectorAll(".wordmark:not(.wm-done)")
@@ -85,6 +96,9 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
   </head>
   <body>
     <slot />
+
+    <!-- Film grain — a barely-there documentary texture over the whole site. -->
+    <div class="grain" aria-hidden="true"></div>
 
     <script>
       // Reveal elements as they scroll into view, for a calm staggered

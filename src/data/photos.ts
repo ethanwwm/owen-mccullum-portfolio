@@ -75,7 +75,7 @@ export const photos: Photo[] = [
   { file: "among-the-signs.jpg", title: "Cowboy hat", location: "Washington, D.C. — 2025", series: "streets", span: 4, shape: "port" },
   { file: "jesus-saves.jpg", title: "Jesus Saves", location: "Washington, D.C. — 2025", series: "streets", span: 4, shape: "port" },
   { file: "at-the-court.jpg", title: "My body, my choice", location: "Washington, D.C. — 2025", series: "streets", span: 4, shape: "port" },
-  { file: "parked.jpg", title: "Parked", location: "Washington, D.C. — 2025", series: "streets", span: 12, shape: "feature", print: true },
+  { file: "parked.jpg", title: "Parked", location: "Washington, D.C. — 2025", series: "streets", span: 12, shape: "feature" },
   { file: "worldpride.jpg", title: "Veterans against Trump", location: "Washington, D.C. — 2025", series: "streets", span: 6, shape: "land" },
   // the parade float (was mislabeled "Good boy")
   { file: "good-boy.jpg", title: "Float", location: "WorldPride — 2025", series: "streets", span: 6, shape: "land" },
