@@ -31,3 +31,11 @@ yarn-error.log*
 
 # local reference (original single-file build, 5MB)
 _reference/
+
+# original full-res masters (large) at the repo root — only the
+# web-optimized copies in src/assets/photos are committed
+/photos/
+/Photos/
+
+# scratch/working dir for image processing + catalog
+/.work/

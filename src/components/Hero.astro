@@ -1,22 +1,26 @@
 ---
 import { Image } from "astro:assets";
 import lqip from "../data/lqip.json";
-import onTheRail from "../assets/photos/on-the-rail.jpg";
-import frontRow from "../assets/photos/front-row.jpg";
-import jesusSaves from "../assets/photos/jesus-saves.jpg";
-import atTheCourt from "../assets/photos/at-the-court.jpg";
-import afterHours from "../assets/photos/after-hours.jpg";
+import theBench from "../assets/photos/the-bench.jpg";
+import atTheBarricade from "../assets/photos/at-the-barricade.jpg";
+import theWord from "../assets/photos/the-word.jpg";
+import atTheWall from "../assets/photos/at-the-wall.jpg";
+import pastTheFence from "../assets/photos/past-the-fence.jpg";
+import theCrossing from "../assets/photos/the-crossing.jpg";
+import sky from "../assets/photos/sky.jpg";
 
 const lqipMap = lqip as Record<string, string>;
 
 // A slow cross-dissolve between a handful of the strongest frames — like
 // slides advancing in a gallery projection.
 const slides = [
-  { img: onTheRail, file: "on-the-rail.jpg", alt: "A man with a handheld rainbow flag at the barricade during WorldPride, Washington, D.C.", caption: "On the rail · WorldPride — 2025" },
-  { img: frontRow, file: "front-row.jpg", alt: "WorldPride parade crowd at the barricade, Washington, D.C.", caption: "Front row · WorldPride — 2025" },
-  { img: jesusSaves, file: "jesus-saves.jpg", alt: "A man holding a 'Jesus Saves' sign in falling snow, Washington, D.C.", caption: "Jesus Saves · Washington, D.C. — 2025" },
-  { img: atTheCourt, file: "at-the-court.jpg", alt: "A 'My body, my choice' demonstration, Washington, D.C.", caption: "My body, my choice · Washington, D.C. — 2025" },
-  { img: afterHours, file: "after-hours.jpg", alt: "People leaving an evening venue under string lights, Washington, D.C.", caption: "After hours · Washington, D.C. — 2025" },
+  { img: theBench, file: "the-bench.jpg", alt: "Four people seated along a long, low marble bench on a bright stone plaza in hard midday sun, Washington, D.C.", caption: "The Bench · Washington, D.C. — 2025" },
+  { img: atTheBarricade, file: "at-the-barricade.jpg", alt: "A bearded man sits behind a white metal crowd-control barricade, gripping one bar, at a public gathering, Washington, D.C.", caption: "At the Barricade · Washington, D.C. — 2025" },
+  { img: theWord, file: "the-word.jpg", alt: "A small group stands on a low platform on the snow-covered National Mall in winter, Washington, D.C.", caption: "The Word · Washington, D.C. — 2025" },
+  { img: atTheWall, file: "at-the-wall.jpg", alt: "Four young people lie on their backs on a stone plaza at the foot of a massive pale monument wall, Washington, D.C.", caption: "At the Wall · Washington, D.C. — 2025" },
+  { img: pastTheFence, file: "past-the-fence.jpg", alt: "Formally dressed people walk a sidewalk at night beside a tall security fence, Washington, D.C.", caption: "Past the Fence · Washington, D.C. — 2025" },
+  { img: theCrossing, file: "the-crossing.jpg", alt: "An adult wades through shallow water in a dark cavern, holding a small child's hand.", caption: "The Crossing — 2025" },
+  { img: sky, file: "sky.jpg", alt: "A wide expanse of blue sky scattered with soft clouds above a low hilltop, Washington, D.C.", caption: "Sky · Washington, D.C. — 2025" },
 ];
 ---
 
@@ -33,9 +37,9 @@ const slides = [
             class="blurup"
             src={s.img}
             alt={s.alt}
-            widths={[768, 1280, 1900]}
+            widths={[1280, 1920, 2560, 3840]}
             sizes="100vw"
-            quality={80}
+            quality={90}
             loading={i === 0 ? "eager" : "lazy"}
             fetchpriority={i === 0 ? "high" : "low"}
           />

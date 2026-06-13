@@ -29,8 +29,8 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
     <script is:inline>
       document.documentElement.classList.add("js");
       try {
-        if (localStorage.getItem("tone") === "color")
-          document.documentElement.classList.add("color-on");
+        if (localStorage.getItem("tone") === "bw")
+          document.documentElement.classList.add("bw-on");
       } catch (e) {}
       // Deter casual image saving: block right-click "Save image" and drag on
       // images. Document-level so it persists across View Transitions.

@@ -8,21 +8,21 @@ import type { ImageMetadata } from "astro";
  */
 
 export type PhotoSpan = 4 | 6 | 12;
-export type PhotoShape = "land" | "port" | "feature";
-export type SeriesId = "portraits" | "streets";
+export type PhotoShape = "land" | "port" | "feature" | "square";
+export type SeriesId = "assembly" | "portraits" | "square" | "stillness";
 
 export interface Photo {
   /** Filename inside src/assets/photos */
   file: string;
   title: string;
   location: string;
-  /** Which series this print belongs to */
+  /** Which section of the gallery this photograph belongs to */
   series: SeriesId;
   /** Grid columns to span (out of 12) */
   span: PhotoSpan;
   /** Aspect-ratio treatment */
   shape: PhotoShape;
-  /** Available as a print (only photos with no identifiable likeness) */
+  /** Available as a print (only photographs with no identifiable likeness) */
   print?: boolean;
 }
 
@@ -35,56 +35,70 @@ export interface Series {
   note: string;
 }
 
-/** The two bodies of work, in display order. */
+/** The bodies of work, in display order. */
 export const series: Series[] = [
-  {
-    id: "portraits",
-    index: "01",
-    title: "Portraits",
-    note: "The people of the capital — vendors, believers, marchers, and passers-through, met at arm's length.",
-  },
-  {
-    id: "streets",
-    index: "02",
-    title: "Streets",
-    note: "Public life in Washington — rallies, parades, and the ordinary texture of the city.",
-  },
+  { id: "assembly", index: "01", title: "Assembly", note: "Public life in the capital — the parade, the barricade, the crowd at full volume." },
+  { id: "portraits", index: "02", title: "Portraits", note: "People met at arm's length — a gesture, a held gaze, a face turned to the light." },
+  { id: "square", index: "03", title: "The Square", note: "Belief and dissent in the open air — the flag, the sign, the word on the Mall." },
+  { id: "stillness", index: "04", title: "Stillness", note: "The city between events — stone, solitude, and the long quiet." },
 ];
 
-// Order within each series is the on-page order. Spans are balanced so each
-// series grid fills cleanly.
-// Captions were swept against the actual images (vision + adversarial
-// verification). Notable corrections: "worldpride.jpg" is a Veterans-Against-
-// Trump protest at the Supreme Court (no Pride content); the dog and the parade
-// float had their "Good boy"/"Float" titles swapped; several others retitled to
-// match what's actually shown.
+// Order within each section is the on-page order. Titles and classifications
+// were derived from the photographs themselves (vision pass + adversarial
+// verification) — locations are kept general where the frame doesn't prove a
+// specific place. Photographs with any identifiable likeness are not offered
+// as prints.
 export const photos: Photo[] = [
-  // ── 01 · Portraits ────────────────────────────────────────────────
-  { file: "face-paint.jpg", title: "Face paint", location: "Washington, D.C. — 2025", series: "portraits", span: 12, shape: "feature" },
-  { file: "flag-vendor.jpg", title: "Flag vendor", location: "Washington, D.C. — 2025", series: "portraits", span: 4, shape: "port" },
-  { file: "corner-sermon.jpg", title: "Street preachers", location: "Washington, D.C. — 2025", series: "portraits", span: 4, shape: "port" },
-  { file: "the-other-camera.jpg", title: "The other camera", location: "Washington, D.C. — 2025", series: "portraits", span: 4, shape: "port" },
-  { file: "the-interview.jpg", title: "The interview", location: "Washington, D.C. — 2025", series: "portraits", span: 6, shape: "land" },
-  // the dog (was mislabeled "Float") — no identifiable likeness, print-eligible
-  { file: "float.jpg", title: "Good boy", location: "WorldPride — 2025", series: "portraits", span: 6, shape: "land", print: true },
+  // ── 01 · Assembly ────────────────────────────────────────────
+  { file: "phones-at-dusk.jpg", title: "Phones at Dusk",    location: "Washington, D.C. — 2025",series: "assembly",     span: 12, shape: "feature"   },
+  { file: "good-boy.jpg",       title: "Good Boy",          location: "Washington, D.C. — 2025",series: "assembly",     span: 6,  shape: "land"     , print: true },
+  { file: "bubbles.jpg",        title: "Bubbles",           location: "Washington, D.C. — 2025",series: "assembly",     span: 6,  shape: "land"      },
+  { file: "at-the-barricade.jpg",title: "At the Barricade",  location: "Washington, D.C. — 2025",series: "assembly",     span: 6,  shape: "land"      },
+  { file: "spectators.jpg",     title: "Spectators",        location: "Washington, D.C. — 2025",series: "assembly",     span: 6,  shape: "land"      },
+  { file: "painted.jpg",        title: "Painted",           location: "Washington, D.C. — 2025",series: "assembly",     span: 6,  shape: "land"      },
+  { file: "close-press.jpg",    title: "Close Press",       location: "Washington, D.C. — 2025",series: "assembly",     span: 6,  shape: "land"     , print: true },
+  { file: "aerialist.jpg",      title: "Aerialist",         location: "Washington, D.C. — 2025",series: "assembly",     span: 6,  shape: "land"      },
+  { file: "after-dark.jpg",     title: "After Dark",        location: "Washington, D.C. — 2025",series: "assembly",     span: 6,  shape: "land"      },
+  { file: "the-rail.jpg",       title: "The Rail",          location: "Washington, D.C. — 2025",series: "assembly",     span: 4,  shape: "port"      },
+  { file: "reach.jpg",          title: "Reach",             location: "Washington, D.C. — 2025",series: "assembly",     span: 4,  shape: "port"      },
+  { file: "the-mic.jpg",        title: "The Mic",           location: "Washington, D.C. — 2025",series: "assembly",     span: 4,  shape: "port"      },
+  { file: "in-costume.jpg",     title: "In Costume",        location: "Washington, D.C. — 2025",series: "assembly",     span: 4,  shape: "port"      },
 
-  // ── 02 · Streets ──────────────────────────────────────────────────
-  { file: "on-the-rail.jpg", title: "On the rail", location: "WorldPride — 2025", series: "streets", span: 12, shape: "feature" },
-  { file: "on-15th-street.jpg", title: "On 15th Street", location: "Washington, D.C. — 2025", series: "streets", span: 6, shape: "land" },
-  { file: "cold-snap.jpg", title: "Cold snap", location: "Washington, D.C. — 2025", series: "streets", span: 6, shape: "land" },
-  { file: "among-the-signs.jpg", title: "Cowboy hat", location: "Washington, D.C. — 2025", series: "streets", span: 4, shape: "port" },
-  { file: "jesus-saves.jpg", title: "Jesus Saves", location: "Washington, D.C. — 2025", series: "streets", span: 4, shape: "port" },
-  { file: "at-the-court.jpg", title: "My body, my choice", location: "Washington, D.C. — 2025", series: "streets", span: 4, shape: "port" },
-  { file: "parked.jpg", title: "Parked", location: "Washington, D.C. — 2025", series: "streets", span: 12, shape: "feature" },
-  { file: "worldpride.jpg", title: "Veterans against Trump", location: "Washington, D.C. — 2025", series: "streets", span: 6, shape: "land" },
-  // the parade float (was mislabeled "Good boy")
-  { file: "good-boy.jpg", title: "Float", location: "WorldPride — 2025", series: "streets", span: 6, shape: "land" },
-  { file: "after-hours.jpg", title: "After hours", location: "Washington, D.C. — 2025", series: "streets", span: 6, shape: "land" },
-  { file: "front-row.jpg", title: "Front row", location: "WorldPride — 2025", series: "streets", span: 6, shape: "land" },
-  { file: "afterparty.jpg", title: "Spectators", location: "WorldPride — 2025", series: "streets", span: 12, shape: "feature" },
+  // ── 02 · Portraits ───────────────────────────────────────────
+  { file: "the-tree.jpg",       title: "The Tree",          location: "Washington, D.C. — 2025",series: "portraits",    span: 12, shape: "feature"   },
+  { file: "the-couple.jpg",     title: "The Couple",        location: "Washington, D.C. — 2025",series: "portraits",    span: 6,  shape: "land"      },
+  { file: "the-fence.jpg",      title: "The Fence",         location: "Washington, D.C. — 2025",series: "portraits",    span: 6,  shape: "land"      },
+  { file: "her-light.jpg",      title: "Her Light",         location: "Washington, D.C. — 2025",series: "portraits",    span: 4,  shape: "port"      },
+  { file: "seated.jpg",         title: "Seated",            location: "Washington, D.C. — 2025",series: "portraits",    span: 4,  shape: "port"      },
+  { file: "cowboy.jpg",         title: "Cowboy",            location: "Washington, D.C. — 2025",series: "portraits",    span: 4,  shape: "port"      },
+  { file: "at-rest.jpg",        title: "At Rest",           location: "Washington, D.C. — 2025",series: "portraits",    span: 4,  shape: "port"      },
+
+  // ── 03 · The Square ──────────────────────────────────────────
+  { file: "veteran.jpg",        title: "Veteran",           location: "Washington, D.C. — 2025",series: "square",       span: 12, shape: "feature"   },
+  { file: "the-word.jpg",       title: "The Word",          location: "Washington, D.C. — 2025",series: "square",       span: 6,  shape: "land"      },
+  { file: "flags.jpg",          title: "Flags",             location: "Washington, D.C. — 2025",series: "square",       span: 4,  shape: "port"      },
+  { file: "her-choice.jpg",     title: "Her Choice",        location: "Washington, D.C. — 2025",series: "square",       span: 4,  shape: "port"      },
+  { file: "red-cap.jpg",        title: "Red Cap",           location: "Washington, D.C. — 2025",series: "square",       span: 4,  shape: "port"      },
+
+  // ── 04 · Stillness ───────────────────────────────────────────
+  { file: "red-steps.jpg",      title: "Red Steps",         location: "Washington, D.C. — 2025",series: "stillness",    span: 12, shape: "feature"  , print: true },
+  { file: "two-profiles.jpg",   title: "Two Profiles",      location: "Washington, D.C. — 2025",series: "stillness",    span: 6,  shape: "square"   , print: true },
+  { file: "at-the-wall.jpg",    title: "At the Wall",       location: "Washington, D.C. — 2025",series: "stillness",    span: 6,  shape: "land"      },
+  { file: "the-wall.jpg",       title: "The Wall",          location: "Washington, D.C. — 2025",series: "stillness",    span: 6,  shape: "land"      },
+  { file: "the-bench.jpg",      title: "The Bench",         location: "Washington, D.C. — 2025",series: "stillness",    span: 6,  shape: "land"      },
+  { file: "red-stair.jpg",      title: "Red Stair",         location: "Washington, D.C. — 2025",series: "stillness",    span: 6,  shape: "land"      },
+  { file: "the-suit.jpg",       title: "The Suit",          location: "Washington, D.C. — 2025",series: "stillness",    span: 6,  shape: "land"      },
+  { file: "watched.jpg",        title: "Watched",           location: "Washington, D.C. — 2025",series: "stillness",    span: 6,  shape: "land"      },
+  { file: "solitude.jpg",       title: "Solitude",          location: "Washington, D.C. — 2025",series: "stillness",    span: 6,  shape: "land"      },
+  { file: "sky.jpg",            title: "Sky",               location: "Washington, D.C. — 2025",series: "stillness",    span: 6,  shape: "land"     , print: true },
+  { file: "rest.jpg",           title: "Rest",              location: "Washington, D.C. — 2025",series: "stillness",    span: 6,  shape: "land"      },
+  { file: "on-the-grass.jpg",   title: "On the Grass",      location: "Washington, D.C. — 2025",series: "stillness",    span: 6,  shape: "land"      },
+  { file: "past-the-fence.jpg", title: "Past the Fence",    location: "Washington, D.C. — 2025",series: "stillness",    span: 6,  shape: "land"      },
+  { file: "the-crossing.jpg",   title: "The Crossing",      location: "Washington, D.C. — 2025",series: "stillness",    span: 6,  shape: "land"      },
+  { file: "child-and-cat.jpg",  title: "Child and Cat",     location: "Washington, D.C. — 2025",series: "stillness",    span: 4,  shape: "port"      },
 ];
 
-/** Photos for one series, in display order. */
+/** Photos for one section, in display order. */
 export function photosBySeries(id: SeriesId): Photo[] {
   return photos.filter((p) => p.series === id);
 }
