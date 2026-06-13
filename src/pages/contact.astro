@@ -7,7 +7,7 @@ const title = "Contact — Owen McCullum";
 const description =
   "Inquire with Owen McCullum — documentary & street photographer based in Washington, D.C. Prints, licensing, and editorial assignments.";
 
-const EMAIL = "opmccullum@gmail.com";
+const EMAIL = "owenmcc.photo@gmail.com";
 ---
 
 <BaseLayout title={title} description={description}>
@@ -89,8 +89,8 @@ const EMAIL = "opmccullum@gmail.com";
         </div>
         <div class="contact-block reveal" style="--d:160ms">
           <p class="ck">Elsewhere</p>
-          <a class="big" href="https://instagram.com/owenhowsitgoin" target="_blank" rel="noopener">
-            Instagram → @owenhowsitgoin
+          <a class="big" href="https://instagram.com/owenmcc.photo" target="_blank" rel="noopener">
+            Instagram → @owenmcc.photo
           </a>
         </div>
         <div class="contact-block reveal" style="--d:240ms">
@@ -116,7 +116,7 @@ const EMAIL = "opmccullum@gmail.com";
 </BaseLayout>
 
 <script>
-  const TO = "opmccullum@gmail.com";
+  const TO = "owenmcc.photo@gmail.com";
 
   function initInquire() {
     const form = document.querySelector<HTMLFormElement>(".inquire");
@@ -195,7 +195,7 @@ const EMAIL = "opmccullum@gmail.com";
             email: email.value.trim(),
             "inquiring about": typeEl.value,
             message: message.value.trim(),
-            _subject: `${typeEl.value} inquiry — ${name.value.trim()} (owenmccullumphoto.com)`,
+            _subject: `${typeEl.value} inquiry — ${name.value.trim()} (owenmcc.photo)`,
             _template: "table",
             _captcha: "false",
           }),
