@@ -32,13 +32,19 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
         if (localStorage.getItem("tone") === "bw")
           document.documentElement.classList.add("bw-on");
       } catch (e) {}
-      // Deter casual image saving: block right-click "Save image" and drag on
-      // images. Document-level so it persists across View Transitions.
+      // Deter casual image saving: block right-click ("Save image", "Open image
+      // in new tab") and drag on photographs — including the overlay elements
+      // layered over them. Document-level so it survives View Transitions.
+      var imgSel = ".plate, .ph, .lb, .hero, .hero-slide, .print-card, .portrait";
       document.addEventListener("contextmenu", function (e) {
-        if (e.target && e.target.tagName === "IMG") e.preventDefault();
+        var t = e.target;
+        if (t && (t.tagName === "IMG" || (t.closest && t.closest(imgSel))))
+          e.preventDefault();
       });
       document.addEventListener("dragstart", function (e) {
-        if (e.target && e.target.tagName === "IMG") e.preventDefault();
+        var t = e.target;
+        if (t && (t.tagName === "IMG" || (t.closest && t.closest(imgSel))))
+          e.preventDefault();
       });
       // Blur-up: fade each image in once it has loaded (capture phase so it
       // catches load events on images anywhere, including ones added later).
