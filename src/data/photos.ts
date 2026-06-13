@@ -65,13 +65,16 @@ export const photos: Photo[] = [
   { file: "in-costume.jpg",     title: "In Costume",        location: "Washington, D.C. — 2025",series: "assembly",     span: 4,  shape: "port"      },
 
   // ── 02 · Portraits ───────────────────────────────────────────
-  { file: "the-tree.jpg",       title: "The Tree",          location: "Washington, D.C. — 2025",series: "portraits",    span: 12, shape: "feature"   },
-  { file: "the-couple.jpg",     title: "The Couple",        location: "Washington, D.C. — 2025",series: "portraits",    span: 6,  shape: "land"      },
-  { file: "the-fence.jpg",      title: "The Fence",         location: "Washington, D.C. — 2025",series: "portraits",    span: 6,  shape: "land"      },
-  { file: "her-light.jpg",      title: "Her Light",         location: "Washington, D.C. — 2025",series: "portraits",    span: 4,  shape: "port"      },
-  { file: "seated.jpg",         title: "Seated",            location: "Washington, D.C. — 2025",series: "portraits",    span: 4,  shape: "port"      },
-  { file: "cowboy.jpg",         title: "Cowboy",            location: "Washington, D.C. — 2025",series: "portraits",    span: 4,  shape: "port"      },
-  { file: "at-rest.jpg",        title: "At Rest",           location: "Washington, D.C. — 2025",series: "portraits",    span: 4,  shape: "port"      },
+  { file: "repose.jpg",         title: "Repose",            location: "Washington, D.C. — 2025",series: "portraits",    span: 12, shape: "feature"   },
+  { file: "in-navy.jpg",        title: "In Navy",           location: "Washington, D.C. — 2025",series: "portraits",    span: 4,  shape: "port"      },
+  { file: "steady-gaze.jpg",    title: "Steady Gaze",       location: "Washington, D.C. — 2025",series: "portraits",    span: 4,  shape: "port"      },
+  { file: "looking-up.jpg",     title: "Looking Up",        location: "Washington, D.C. — 2025",series: "portraits",    span: 4,  shape: "port"      },
+  { file: "the-chair.jpg",      title: "The Chair",         location: "Washington, D.C. — 2025",series: "portraits",    span: 4,  shape: "port"      },
+  { file: "the-lean.jpg",       title: "The Lean",          location: "Washington, D.C. — 2025",series: "portraits",    span: 4,  shape: "port"      },
+  { file: "warm-light.jpg",     title: "Warm Light",        location: "Washington, D.C. — 2025",series: "portraits",    span: 4,  shape: "port"      },
+  { file: "adorned.jpg",        title: "Adorned",           location: "Washington, D.C. — 2025",series: "portraits",    span: 4,  shape: "port"      },
+  { file: "sunlight.jpg",       title: "Sunlight",          location: "Washington, D.C. — 2025",series: "portraits",    span: 4,  shape: "port"      },
+  { file: "the-matriarch.jpg",  title: "The Matriarch",     location: "Washington, D.C. — 2025",series: "portraits",    span: 4,  shape: "port"      },
 
   // ── 03 · The Square ──────────────────────────────────────────
   { file: "veteran.jpg",        title: "Veteran",           location: "Washington, D.C. — 2025",series: "square",       span: 12, shape: "feature"   },
