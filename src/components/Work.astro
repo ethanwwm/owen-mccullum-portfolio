@@ -59,10 +59,10 @@ const indexOf = new Map(ordered.map((p, i) => [p.file, i]));
       type="button"
       role="switch"
       aria-checked="false"
-      aria-label="Show photographs in color"
+      aria-label="Show photographs in black and white"
     >
       <span class="tone-switch" aria-hidden="true"><span class="tone-knob" /></span>
-      <span class="tone-text">Color</span>
+      <span class="tone-text">Black &amp; white</span>
     </button>
   </div>
   {
@@ -143,15 +143,15 @@ const indexOf = new Map(ordered.map((p, i) => [p.file, i]));
     btn.dataset.wired = "1";
 
     const sync = () => {
-      const on = document.documentElement.classList.contains("color-on");
+      const on = document.documentElement.classList.contains("bw-on");
       btn.setAttribute("aria-checked", String(on));
     };
     sync();
 
     btn.addEventListener("click", () => {
-      const on = document.documentElement.classList.toggle("color-on");
+      const on = document.documentElement.classList.toggle("bw-on");
       try {
-        localStorage.setItem("tone", on ? "color" : "bw");
+        localStorage.setItem("tone", on ? "bw" : "color");
       } catch (e) {}
       sync();
     });

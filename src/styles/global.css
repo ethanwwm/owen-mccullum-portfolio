@@ -514,20 +514,17 @@ a:focus-visible,
    and disabled under prefers-reduced-motion.
 ---------------------------------------------------------------------------- */
 
-/* Gallery is black & white by default (the portrait deliberately stays in
-   color). Desktop reveals color on hover/focus; the Color toggle flips the
-   whole gallery to color via `html.color-on`. */
-.plate img {
+/* Gallery is in color by default; the Black & white toggle desaturates the
+   whole gallery via `html.bw-on`. While in black & white, desktop hover/focus
+   reveals the color frame underneath. */
+html.bw-on .plate img {
   filter: grayscale(1) contrast(1.03);
 }
 @media (hover: hover) {
-  .plate:hover img,
-  .plate:focus-visible img {
+  html.bw-on .plate:hover img,
+  html.bw-on .plate:focus-visible img {
     filter: grayscale(0) contrast(1);
   }
-}
-html.color-on .plate img {
-  filter: none !important;
 }
 
 /* Scroll / load reveal — hidden only when JS is present to un-hide it */
@@ -1158,6 +1155,20 @@ html.js .wordmark.wm-done .wm-l {
   text-decoration-color: var(--ink);
 }
 
+/* Inline links inside document body copy (Terms, Prints) match the lede:
+   ink text with a quiet underline that darkens on hover. The .big CTAs keep
+   their own treatment. */
+.doc-b p a:not(.big) {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--line);
+  transition: text-decoration-color 0.25s ease;
+}
+.doc-b p a:not(.big):hover {
+  text-decoration-color: var(--ink);
+}
+
 /* Pricing widget (third-party Tali embed; renders into its own shadow DOM) */
 .pricing-widget {
   max-width: 820px;
@@ -1281,7 +1292,8 @@ html.js .wordmark.wm-done .wm-l {
   margin: 0 0 14px;
 }
 .contact-block a.big,
-.contact-block p.big {
+.contact-block p.big,
+.doc-b a.big {
   font-family: var(--display);
   font-weight: 500;
   font-size: clamp(20px, 2.4vw, 30px);
@@ -1292,7 +1304,11 @@ html.js .wordmark.wm-done .wm-l {
   margin: 0 0 26px;
   line-height: 1.15;
 }
-.contact-block a.big:hover {
+.doc-b a.big {
+  margin: 0;
+}
+.contact-block a.big:hover,
+.doc-b a.big:hover {
   color: var(--mute);
 }
 .contact-block p {
