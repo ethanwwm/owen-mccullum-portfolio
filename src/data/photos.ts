@@ -50,19 +50,13 @@ export const series: Series[] = [
 // as prints.
 export const photos: Photo[] = [
   // ── 01 · Assembly ────────────────────────────────────────────
-  { file: "phones-at-dusk.jpg", title: "Phones at Dusk",    location: "Washington, D.C. — 2025",series: "assembly",     span: 12, shape: "feature"   },
-  { file: "good-boy.jpg",       title: "Good Boy",          location: "Washington, D.C. — 2025",series: "assembly",     span: 6,  shape: "land"     , print: true },
-  { file: "bubbles.jpg",        title: "Bubbles",           location: "Washington, D.C. — 2025",series: "assembly",     span: 6,  shape: "land"      },
-  { file: "at-the-barricade.jpg",title: "At the Barricade",  location: "Washington, D.C. — 2025",series: "assembly",     span: 6,  shape: "land"      },
-  { file: "spectators.jpg",     title: "Spectators",        location: "Washington, D.C. — 2025",series: "assembly",     span: 6,  shape: "land"      },
-  { file: "painted.jpg",        title: "Painted",           location: "Washington, D.C. — 2025",series: "assembly",     span: 6,  shape: "land"      },
-  { file: "close-press.jpg",    title: "Close Press",       location: "Washington, D.C. — 2025",series: "assembly",     span: 6,  shape: "land"     , print: true },
-  { file: "aerialist.jpg",      title: "Aerialist",         location: "Washington, D.C. — 2025",series: "assembly",     span: 6,  shape: "land"      },
-  { file: "after-dark.jpg",     title: "After Dark",        location: "Washington, D.C. — 2025",series: "assembly",     span: 6,  shape: "land"      },
-  { file: "the-rail.jpg",       title: "The Rail",          location: "Washington, D.C. — 2025",series: "assembly",     span: 4,  shape: "port"      },
-  { file: "reach.jpg",          title: "Reach",             location: "Washington, D.C. — 2025",series: "assembly",     span: 4,  shape: "port"      },
-  { file: "the-mic.jpg",        title: "The Mic",           location: "Washington, D.C. — 2025",series: "assembly",     span: 4,  shape: "port"      },
-  { file: "in-costume.jpg",     title: "In Costume",        location: "Washington, D.C. — 2025",series: "assembly",     span: 4,  shape: "port"      },
+  // The festival/crowd frames also featured in the home hero carousel.
+  { file: "into-the-light.jpg", title: "Into the Light",    location: "Washington, D.C. — 2025",series: "assembly",     span: 12, shape: "feature"   },
+  { file: "center-stage.jpg",   title: "Center Stage",      location: "Washington, D.C. — 2025",series: "assembly",     span: 6,  shape: "land"      },
+  { file: "golden-hour.jpg",    title: "Golden Hour",       location: "Washington, D.C. — 2025",series: "assembly",     span: 6,  shape: "land"      },
+  { file: "in-yellow.jpg",      title: "In Yellow",         location: "Washington, D.C. — 2025",series: "assembly",     span: 4,  shape: "port"      },
+  { file: "back-to-back.jpg",   title: "Back to Back",      location: "Washington, D.C. — 2025",series: "assembly",     span: 4,  shape: "port"      },
+  { file: "front-row.jpg",      title: "Front Row",         location: "Washington, D.C. — 2025",series: "assembly",     span: 4,  shape: "land"      },
 
   // ── 02 · Portraits ───────────────────────────────────────────
   { file: "repose.jpg",         title: "Repose",            location: "Washington, D.C. — 2025",series: "portraits",    span: 12, shape: "feature"   },

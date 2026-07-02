@@ -1,171 +1,40 @@
 ---
-import { Image, getImage } from "astro:assets";
-import {
-  series,
-  photosBySeries,
-  getPhotoImage,
-  type PhotoShape,
-} from "../data/photos";
-import Lightbox, { type LightboxImage } from "./Lightbox";
+import { Image } from "astro:assets";
+import { series, photosBySeries, getPhotoImage } from "../data/photos";
 import lqip from "../data/lqip.json";
 
 const lqipMap = lqip as Record<string, string>;
 
-// Width hints per layout so Astro emits appropriately-sized thumbnails.
-const widthsFor: Record<PhotoShape, number[]> = {
-  feature: [768, 1280, 1900],
-  land: [480, 768, 1100],
-  port: [400, 640, 900],
-};
-const sizesFor: Record<PhotoShape, string> = {
-  feature: "(max-width: 860px) 100vw, 1240px",
-  land: "(max-width: 860px) 100vw, 600px",
-  port: "(max-width: 860px) 100vw, 400px",
-};
-
-// Flatten to on-page order, then build large images for the lightbox.
-// The array index here is the `data-lightbox` index used by each plate.
-const ordered = series.flatMap((s) => photosBySeries(s.id));
-
-const lightboxImages: LightboxImage[] = await Promise.all(
-  ordered.map(async (p) => {
-    const orig = getPhotoImage(p.file);
-    const width = Math.min(2400, orig.width);
-    const big = await getImage({
-      src: orig,
-      width,
-      format: "webp",
-      quality: 82,
-    });
-    return {
-      src: big.src,
-      title: p.title,
-      location: p.location,
-      width,
-      height: Math.round((width * orig.height) / orig.width),
-      print: !!p.print,
-      lqip: lqipMap[p.file],
-    };
-  }),
-);
-
-const indexOf = new Map(ordered.map((p, i) => [p.file, i]));
+// One representative frame per series (its lead photograph) linking through to
+// that series' own gallery page.
+const covers = series.map((s) => ({ s, cover: photosBySeries(s.id)[0] }));
 ---
 
 <div class="work" id="work">
-  <div class="work-head">
-    <button
-      class="tone-toggle"
-      type="button"
-      role="switch"
-      aria-checked="false"
-      aria-label="Show photographs in black and white"
-    >
-      <span class="tone-switch" aria-hidden="true"><span class="tone-knob" /></span>
-      <span class="tone-text">Black &amp; white</span>
-    </button>
+  <div class="covers">
+    {
+      covers.map(({ s, cover }, i) => (
+        <a class="cover reveal" href={`/work/${s.id}`} style={`--d:${(i % 2) * 120}ms`}>
+          <span class="cover-ph" style={`background-image:url("${lqipMap[cover.file]}")`}>
+            <Image
+              class="blurup"
+              src={getPhotoImage(cover.file)}
+              alt={`${s.title} — ${cover.title}`}
+              widths={[480, 768, 1100]}
+              sizes="(max-width: 860px) 100vw, 620px"
+              quality={80}
+              loading="lazy"
+              decoding="async"
+            />
+          </span>
+          <span class="cover-meta">
+            <span class="cover-idx">{s.index}</span>
+            <span class="cover-title">{s.title}</span>
+            <span class="cover-note">{s.note}</span>
+            <span class="cover-cta" aria-hidden="true">View gallery →</span>
+          </span>
+        </a>
+      ))
+    }
   </div>
-  {
-    series.map((s) => (
-      <section class="series" id={s.id}>
-        <div class="series-head reveal">
-          <span class="series-idx">{s.index}</span>
-          <h2 class="series-title">{s.title}</h2>
-          <p class="series-note">{s.note}</p>
-        </div>
-        <div class="grid">
-          {photosBySeries(s.id).map((p, i) => (
-            <button
-              type="button"
-              class={`plate c${p.span} s-${p.shape} reveal`}
-              style={`--d:${(i % 4) * 90}ms`}
-              data-lightbox={indexOf.get(p.file)}
-              aria-label={`Expand “${p.title}”`}
-            >
-              <span
-                class="ph"
-                style={`background-image:url("${lqipMap[p.file]}")`}
-              >
-                <Image
-                  class="blurup"
-                  src={getPhotoImage(p.file)}
-                  alt={p.title}
-                  widths={widthsFor[p.shape]}
-                  sizes={sizesFor[p.shape]}
-                  quality={78}
-                  loading="lazy"
-                  decoding="async"
-                />
-                {p.print && (
-                  <span class="print-badge">
-                    <span class="print-dot" aria-hidden="true" />
-                    Available as a print
-                  </span>
-                )}
-                <span class="expand-hint" aria-hidden="true">View</span>
-              </span>
-              <span class="cap">
-                <span class="t">{p.title}</span>
-                <span>{p.location}</span>
-              </span>
-            </button>
-          ))}
-        </div>
-      </section>
-    ))
-  }
-
-  <Lightbox client:load images={lightboxImages} />
 </div>
-
-<script>
-  // Delegate plate clicks to the React lightbox island.
-  function wirePlates() {
-    document.querySelectorAll<HTMLElement>("[data-lightbox]").forEach((el) => {
-      if (el.dataset.lbWired) return;
-      el.dataset.lbWired = "1";
-      el.addEventListener("click", () => {
-        const index = Number(el.dataset.lightbox);
-        // Tag the clicked image so the lightbox can morph out of it.
-        const img = el.querySelector<HTMLElement>("img");
-        if (img) img.style.viewTransitionName = "active-photo";
-        window.dispatchEvent(
-          new CustomEvent("lightbox:open", { detail: { index } }),
-        );
-      });
-    });
-  }
-  // Black & white ↔ color toggle (persists in localStorage; applied before
-  // paint by the inline head script).
-  function wireToneToggle() {
-    const btn = document.querySelector<HTMLButtonElement>(".tone-toggle");
-    if (!btn || btn.dataset.wired) return;
-    btn.dataset.wired = "1";
-
-    const sync = () => {
-      const on = document.documentElement.classList.contains("bw-on");
-      btn.setAttribute("aria-checked", String(on));
-    };
-    sync();
-
-    btn.addEventListener("click", () => {
-      const on = document.documentElement.classList.toggle("bw-on");
-      try {
-        localStorage.setItem("tone", on ? "bw" : "color");
-      } catch (e) {}
-      sync();
-    });
-  }
-
-  function initWork() {
-    wirePlates();
-    wireToneToggle();
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initWork, { once: true });
-  } else {
-    initWork();
-  }
-  document.addEventListener("astro:page-load", initWork);
-</script>

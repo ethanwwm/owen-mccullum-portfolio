@@ -1,0 +1,29 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import Gallery from "../../components/Gallery.astro";
+import { series } from "../../data/photos";
+
+export function getStaticPaths() {
+  return series.map((s) => ({ params: { series: s.id }, props: { s } }));
+}
+
+const { s } = Astro.props;
+const title = `${s.title} — Owen McCullum`;
+const description = s.note;
+---
+
+<BaseLayout title={title} description={description}>
+  <Header />
+  <main class="wrap page">
+    <header class="page-head reveal">
+      <p class="page-eyebrow">{s.index} · Work</p>
+      <h1 class="page-title">{s.title}</h1>
+      <p class="page-lede">{s.note}</p>
+    </header>
+
+    <Gallery seriesId={s.id} />
+  </main>
+  <Footer />
+</BaseLayout>
