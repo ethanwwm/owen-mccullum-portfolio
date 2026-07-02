@@ -1,154 +1,202 @@
 ---
 import { Image } from "astro:assets";
 import lqip from "../data/lqip.json";
-import theBench from "../assets/photos/the-bench.jpg";
-import atTheBarricade from "../assets/photos/at-the-barricade.jpg";
-import theWord from "../assets/photos/the-word.jpg";
-import atTheWall from "../assets/photos/at-the-wall.jpg";
-import pastTheFence from "../assets/photos/past-the-fence.jpg";
-import theCrossing from "../assets/photos/the-crossing.jpg";
-import sky from "../assets/photos/sky.jpg";
+import intoTheLight from "../assets/photos/into-the-light.jpg";
+import inYellow from "../assets/photos/in-yellow.jpg";
+import centerStage from "../assets/photos/center-stage.jpg";
+import goldenHour from "../assets/photos/golden-hour.jpg";
+import backToBack from "../assets/photos/back-to-back.jpg";
+import frontRow from "../assets/photos/front-row.jpg";
+import remembrance from "../assets/photos/remembrance.jpg";
+import wallLine from "../assets/photos/wall-line.jpg";
+import theRiser from "../assets/photos/the-riser.jpg";
 
 const lqipMap = lqip as Record<string, string>;
 
-// A slow cross-dissolve between a handful of the strongest frames — like
-// slides advancing in a gallery projection.
-const slides = [
-  { img: theBench, file: "the-bench.jpg", alt: "Four people seated along a long, low marble bench on a bright stone plaza in hard midday sun, Washington, D.C.", caption: "The Bench · Washington, D.C. — 2025" },
-  { img: atTheBarricade, file: "at-the-barricade.jpg", alt: "A bearded man sits behind a white metal crowd-control barricade, gripping one bar, at a public gathering, Washington, D.C.", caption: "At the Barricade · Washington, D.C. — 2025" },
-  { img: theWord, file: "the-word.jpg", alt: "A small group stands on a low platform on the snow-covered National Mall in winter, Washington, D.C.", caption: "The Word · Washington, D.C. — 2025" },
-  { img: atTheWall, file: "at-the-wall.jpg", alt: "Four young people lie on their backs on a stone plaza at the foot of a massive pale monument wall, Washington, D.C.", caption: "At the Wall · Washington, D.C. — 2025" },
-  { img: pastTheFence, file: "past-the-fence.jpg", alt: "Formally dressed people walk a sidewalk at night beside a tall security fence, Washington, D.C.", caption: "Past the Fence · Washington, D.C. — 2025" },
-  { img: theCrossing, file: "the-crossing.jpg", alt: "An adult wades through shallow water in a dark cavern, holding a small child's hand.", caption: "The Crossing — 2025" },
-  { img: sky, file: "sky.jpg", alt: "A wide expanse of blue sky scattered with soft clouds above a low hilltop, Washington, D.C.", caption: "Sky · Washington, D.C. — 2025" },
+// A horizontal filmstrip the visitor scrolls through. Each frame magnet-snaps
+// to the center of the screen; the centered frame is full size and opaque,
+// while its neighbours shrink and fade. Whole images are shown, so any aspect
+// ratio (landscape or portrait) sits comfortably side by side.
+const frames = [
+  { img: inYellow, file: "in-yellow.jpg", alt: "A person with long locs in a yellow mesh cut-out top at an outdoor festival, Washington, D.C.", caption: "In Yellow · Washington, D.C. — 2025" },
+  { img: intoTheLight, file: "into-the-light.jpg", alt: "Backlit silhouettes of a crowd against a bright sky, hands and a phone raised overhead.", caption: "Into the Light · Washington, D.C. — 2025" },
+  { img: centerStage, file: "center-stage.jpg", alt: "A drag performer in a teal costume throws both arms wide on an outdoor festival stage beneath a clear blue sky.", caption: "Center Stage · Washington, D.C. — 2025" },
+  { img: goldenHour, file: "golden-hour.jpg", alt: "A concert crowd in warm low sun; a person in a red cap and sunglasses turns toward the camera as the stage glows behind.", caption: "Golden Hour · Washington, D.C. — 2025" },
+  { img: backToBack, file: "back-to-back.jpg", alt: "Two figures stand back to back in dramatic low light, black and white.", caption: "Back to Back — 2025" },
+  { img: frontRow, file: "front-row.jpg", alt: "A festival-goer in a bright shirt leans on a metal barricade in the sun, flashing a peace sign, flanked by others.", caption: "Front Row · Washington, D.C. — 2025" },
+  { img: remembrance, file: "remembrance.jpg", alt: "A man in a stars-and-stripes shirt arranges flags and wreaths at a memorial wall as a plane crosses the sky, Washington, D.C.", caption: "Remembrance · Washington, D.C. — 2025" },
+  { img: wallLine, file: "wall-line.jpg", alt: "Several people lie on their backs along the base of a vast pale stone monument wall in hard sun, feet up against the stone, Washington, D.C.", caption: "Against the Wall · Washington, D.C. — 2025" },
+  { img: theRiser, file: "the-riser.jpg", alt: "A person leans out of a raised press platform high on a hydraulic lift, working at equipment against a bright blue sky.", caption: "The Riser · Washington, D.C. — 2025" },
 ];
 ---
 
 <section class="hero">
-  <div class="hero-slides">
+  <div class="hero-strip" role="list" tabindex="0" aria-label="Featured photographs — scroll to advance">
     {
-      slides.map((s, i) => (
-        <div
-          class={`hero-slide${i === 0 ? " active" : ""}`}
-          data-caption={s.caption}
-          style={`background-image:url("${lqipMap[s.file]}")`}
+      frames.map((f, i) => (
+        <figure
+          class={`hero-frame${i === 0 ? " is-center" : ""}`}
+          role="listitem"
+          data-index={i}
+          data-caption={f.caption}
         >
-          <Image
-            class="blurup"
-            src={s.img}
-            alt={s.alt}
-            widths={[1280, 1920, 2560, 3840]}
-            sizes="100vw"
-            quality={90}
-            loading={i === 0 ? "eager" : "lazy"}
-            fetchpriority={i === 0 ? "high" : "low"}
-          />
-        </div>
+          <span class="hero-ph" style={`background-image:url("${lqipMap[f.file]}")`}>
+            <Image
+              class="blurup"
+              src={f.img}
+              alt={f.alt}
+              widths={[640, 1024, 1600, 2200]}
+              sizes="(max-width: 860px) 90vw, 60vw"
+              quality={88}
+              loading={i <= 1 ? "eager" : "lazy"}
+              fetchpriority={i === 0 ? "high" : "auto"}
+            />
+          </span>
+        </figure>
       ))
     }
   </div>
 
   <div class="hero-bar">
-    <figcaption class="hero-cap">{slides[0].caption}</figcaption>
-    <div class="hero-controls">
-      <button type="button" class="hero-toggle" aria-label="Pause slideshow" aria-pressed="false">
-        <svg class="icon-pause" viewBox="0 0 10 12" aria-hidden="true">
-          <rect x="0" y="0" width="3" height="12" rx="0.5" />
-          <rect x="7" y="0" width="3" height="12" rx="0.5" />
-        </svg>
-        <svg class="icon-play" viewBox="0 0 10 12" aria-hidden="true">
-          <path d="M0.5 0 L10 6 L0.5 12 Z" />
-        </svg>
+    <figcaption class="hero-cap">{frames[0].caption}</figcaption>
+    <div class="hero-nav">
+      <button type="button" class="hero-arrow hero-prev" aria-label="Previous photograph" disabled>
+        <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M7.5 1.5 L3 6 L7.5 10.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
       </button>
-      <div class="hero-dots" role="tablist" aria-label="Featured frames">
-        {
-          slides.map((_, i) => (
-            <button
-              type="button"
-              class={`hero-dot${i === 0 ? " on" : ""}`}
-              data-slide={i}
-              aria-label={`Show frame ${i + 1}`}
-              aria-selected={i === 0 ? "true" : "false"}
-            />
-          ))
-        }
-      </div>
+      <span class="hero-count"><span class="hero-cur">1</span> / {frames.length}</span>
+      <button type="button" class="hero-arrow hero-next" aria-label="Next photograph">
+        <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M4.5 1.5 L9 6 L4.5 10.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
+      </button>
     </div>
   </div>
 </section>
 
 <script>
-  let heroTimer: number | undefined;
-
   function initHero() {
     const hero = document.querySelector<HTMLElement>(".hero");
     if (!hero || hero.dataset.init) return;
-    const slides = Array.from(hero.querySelectorAll<HTMLElement>(".hero-slide"));
-    const dots = Array.from(hero.querySelectorAll<HTMLElement>(".hero-dot"));
+    const strip = hero.querySelector<HTMLElement>(".hero-strip");
+    const frames = Array.from(hero.querySelectorAll<HTMLElement>(".hero-frame"));
     const cap = hero.querySelector<HTMLElement>(".hero-cap");
-    const toggle = hero.querySelector<HTMLButtonElement>(".hero-toggle");
-    if (slides.length < 2) return;
+    const prevBtn = hero.querySelector<HTMLButtonElement>(".hero-prev");
+    const nextBtn = hero.querySelector<HTMLButtonElement>(".hero-next");
+    const curEl = hero.querySelector<HTMLElement>(".hero-cur");
+    if (!strip || frames.length < 2) return;
     hero.dataset.init = "1";
 
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const INTERVAL = 4000;
+    const last = frames.length - 1;
     let cur = 0;
-    let playing = false;
 
-    function go(n: number) {
-      cur = (n + slides.length) % slides.length;
-      slides.forEach((s, i) => s.classList.toggle("active", i === cur));
-      dots.forEach((d, i) => {
-        d.classList.toggle("on", i === cur);
-        d.setAttribute("aria-selected", i === cur ? "true" : "false");
-      });
+    // Update the caption, counter, and arrow enabled-states for the current frame.
+    function updateChrome() {
       if (cap) {
         cap.style.opacity = "0";
         window.setTimeout(() => {
-          cap.textContent = slides[cur].dataset.caption ?? "";
+          cap.textContent = frames[cur].dataset.caption ?? "";
           cap.style.opacity = "1";
-        }, 260);
+        }, 200);
       }
+      if (curEl) curEl.textContent = String(cur + 1);
+      prevBtn?.toggleAttribute("disabled", cur === 0);
+      nextBtn?.toggleAttribute("disabled", cur === last);
     }
 
-    const stop = () => {
-      if (heroTimer) {
-        window.clearInterval(heroTimer);
-        heroTimer = undefined;
+    // Paint each frame's scale + opacity from its distance to screen centre,
+    // and surface whichever frame is closest to centre as the current one.
+    let raf = 0;
+    function paint() {
+      raf = 0;
+      const mid = window.innerWidth / 2;
+      let best = 0;
+      let bestDist = Infinity;
+      frames.forEach((f, i) => {
+        const r = f.getBoundingClientRect();
+        const c = r.left + r.width / 2;
+        const dist = Math.abs(c - mid);
+        // 0 at centre → 1 once a frame is a full half-viewport away.
+        const t = Math.min(1, dist / (window.innerWidth * 0.5));
+        f.style.setProperty("--s", (1 - 0.16 * t).toFixed(3));
+        f.style.setProperty("--o", (1 - 0.6 * t).toFixed(3));
+        f.classList.toggle("is-center", t < 0.12);
+        if (dist < bestDist) {
+          bestDist = dist;
+          best = i;
+        }
+      });
+      if (best !== cur) {
+        cur = best;
+        updateChrome();
       }
-    };
-    const play = () => {
-      stop();
-      playing = true;
-      hero.classList.remove("paused");
-      toggle?.setAttribute("aria-label", "Pause slideshow");
-      toggle?.setAttribute("aria-pressed", "false");
-      heroTimer = window.setInterval(() => go(cur + 1), INTERVAL);
-    };
-    const pause = () => {
-      stop();
-      playing = false;
-      hero.classList.add("paused");
-      toggle?.setAttribute("aria-label", "Play slideshow");
-      toggle?.setAttribute("aria-pressed", "true");
-    };
+    }
+    function schedule() {
+      if (!raf) raf = window.requestAnimationFrame(paint);
+    }
 
-    toggle?.addEventListener("click", () => (playing ? pause() : play()));
-    dots.forEach((d, i) =>
-      d.addEventListener("click", () => {
-        go(i);
-        if (playing) play(); // reset the timer on manual selection
+    // Smoothly bring frame `i` to the centre of the screen. We tween
+    // scrollLeft ourselves (native smooth scroll is unreliable while
+    // scroll-snap is mandatory), lifting snap for the duration of the glide.
+    let animId = 0;
+    function centerOn(i: number) {
+      const f = frames[Math.max(0, Math.min(last, i))];
+      const sr = strip.getBoundingClientRect();
+      const fr = f.getBoundingClientRect();
+      const from = strip.scrollLeft;
+      const to = from + (fr.left + fr.width / 2 - (sr.left + sr.width / 2));
+      const dist = to - from;
+      if (reduce || Math.abs(dist) < 2) {
+        strip.scrollLeft = to;
+        schedule();
+        return;
+      }
+      const id = ++animId;
+      strip.style.scrollSnapType = "none";
+      const dur = 460;
+      const t0 = performance.now();
+      function step(now: number) {
+        if (id !== animId) return; // a newer navigation superseded this one
+        const p = Math.min(1, (now - t0) / dur);
+        const e = p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2; // easeInOut
+        strip.scrollLeft = from + dist * e;
+        schedule();
+        if (p < 1) requestAnimationFrame(step);
+        else strip.style.scrollSnapType = "";
+      }
+      requestAnimationFrame(step);
+    }
+
+    // Arrows are the primary control. Click a neighbouring frame to centre it,
+    // and Left/Right arrow keys step too. The mouse wheel is left alone, so
+    // scrolling up and down the page works normally over the hero.
+    prevBtn?.addEventListener("click", () => centerOn(cur - 1));
+    nextBtn?.addEventListener("click", () => centerOn(cur + 1));
+    frames.forEach((f, i) =>
+      f.addEventListener("click", () => {
+        if (i !== cur) centerOn(i);
       }),
     );
-    document.addEventListener("visibilitychange", () => {
-      if (document.hidden) stop();
-      else if (playing) play();
+    strip.addEventListener("keydown", (e: KeyboardEvent) => {
+      if (e.key === "ArrowRight") {
+        e.preventDefault();
+        centerOn(cur + 1);
+      } else if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        centerOn(cur - 1);
+      }
     });
-    document.addEventListener("astro:before-swap", stop, { once: true });
 
-    // Auto-play unless the visitor prefers reduced motion.
-    if (reduce) pause();
-    else play();
+    strip.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", () => {
+      centerOn(cur);
+      schedule();
+    });
+
+    // Start with the first frame centred.
+    requestAnimationFrame(() => {
+      centerOn(0);
+      updateChrome();
+      schedule();
+    });
   }
 
   if (document.readyState === "loading") {
